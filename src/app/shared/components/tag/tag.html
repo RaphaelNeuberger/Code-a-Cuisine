@@ -1,0 +1,7 @@
+<button
+  class="tag"
+  [class.tag--selected]="selected()"
+  (click)="tagClick.emit()"
+  type="button">
+  {{ label() }}
+</button>

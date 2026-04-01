@@ -1,0 +1,29 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--color-olive);
+  gap: var(--space-xl);
+
+  &__spinner {
+    width: 253px;
+    height: 309px;
+    background: #c4d0c4;
+    border-radius: var(--radius-lg);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  &__text {
+    font-family: var(--font-heading);
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-cream);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

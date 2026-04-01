@@ -1,0 +1,18 @@
+.tag {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 500;
+  background: var(--color-cream);
+  color: var(--color-green-mid);
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+  min-height: 44px;
+
+  &--selected {
+    background: var(--color-olive);
+    color: var(--color-cream);
+  }
+}

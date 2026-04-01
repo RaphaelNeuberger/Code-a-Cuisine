@@ -1,0 +1,61 @@
+.recipe-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  min-width: 280px;
+
+  &__header { display: flex; align-items: center; gap: var(--space-md); }
+
+  &__number {
+    font-size: var(--text-h5);
+    font-weight: 600;
+    color: var(--color-green-mid);
+  }
+
+  &__title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-green-dark);
+    line-height: 1.2;
+  }
+
+  &__time {
+    font-size: var(--text-label);
+    font-weight: 500;
+    color: var(--color-olive);
+    margin-top: var(--space-sm);
+  }
+
+  &__btn {
+    display: inline-block;
+    background: var(--color-cream);
+    color: var(--color-green-pure);
+    font-size: var(--text-h5);
+    font-weight: 600;
+    padding: 16px 26px;
+    min-height: 60px;
+    border-radius: 0;
+  }
+
+  &__thumb {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+  }
+
+  &__tag {
+    background: rgba(57,96,57,0.2);
+    color: var(--color-green-dark);
+    font-size: var(--text-body);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    display: inline-block;
+    margin-top: var(--space-sm);
+  }
+
+  &--library { gap: var(--space-md); padding: var(--space-md); }
+}

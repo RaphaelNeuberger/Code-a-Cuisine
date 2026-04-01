@@ -1,0 +1,82 @@
+.ingredient-input {
+  background: var(--color-input-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+
+  &__label {
+    font-size: var(--text-label);
+    font-weight: 500;
+    color: var(--color-green-dark);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+
+  &__text {
+    background: var(--color-cream);
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 8px 12px;
+    font-family: var(--font-body);
+    font-size: var(--text-p16);
+    color: var(--color-green-dark);
+    width: 100%;
+  }
+
+  &__size-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  &__amount {
+    background: var(--color-cream);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 6px 12px;
+    width: 70px;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    text-align: center;
+  }
+
+  &__unit {
+    background: var(--color-cream);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 6px 10px;
+    font-family: var(--font-body);
+    font-size: var(--text-p16);
+    cursor: pointer;
+  }
+
+  &__add {
+    background: var(--color-olive);
+    color: var(--color-cream);
+    border-radius: var(--radius-sm);
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  &__list { display: flex; flex-direction: column; gap: 6px; }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: 2px 4px;
+  }
+
+  &__qty { font-size: var(--text-body); font-weight: 500; min-width: 60px; }
+  &__name { font-size: var(--text-body); flex: 1; }
+  &__actions { display: flex; gap: var(--space-md); }
+  &__actions button { font-size: 16px; background: none; border: none; cursor: pointer; min-height: 44px; }
+}

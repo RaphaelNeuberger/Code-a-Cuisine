@@ -1,0 +1,27 @@
+<article class="recipe-card" [class.recipe-card--library]="variant() === 'library'">
+  @if (variant() === 'result') {
+    <header class="recipe-card__header">
+      <span class="recipe-card__number">Recipe {{ index() + 1 }}</span>
+    </header>
+    <div class="recipe-card__body">
+      <h3 class="recipe-card__title">{{ recipe().title }}</h3>
+      <p class="recipe-card__time">
+        <span aria-hidden="true">🕐</span>
+        Kochzeit: {{ recipe().cookingTimeMinutes }}min
+      </p>
+    </div>
+    <footer class="recipe-card__footer">
+      <a [routerLink]="['/recipe', recipe().id]" class="recipe-card__btn">View</a>
+    </footer>
+  }
+  @if (variant() === 'library') {
+    @if (recipe().thumbnailUrl) {
+      <img [src]="recipe().thumbnailUrl" [alt]="recipe().title" class="recipe-card__thumb">
+    }
+    <div class="recipe-card__body">
+      <h3 class="recipe-card__title">{{ recipe().title }}</h3>
+      <p class="recipe-card__time">🕐 {{ recipe().cookingTimeMinutes }}min</p>
+      <span class="recipe-card__tag">{{ recipe().cuisine }}</span>
+    </div>
+  }
+</article>

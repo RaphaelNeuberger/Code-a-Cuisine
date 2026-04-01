@@ -1,1 +1,22 @@
-<p>settings works!</p>
+<main class="settings">
+  <h1 class="settings__heading">Einstellungen</h1>
+  @if (quota(); as q) {
+    <section class="settings__quota" aria-labelledby="quota-heading">
+      <h2 id="quota-heading" class="settings__quota-title">Dein tägliches Limit</h2>
+      <div class="settings__quota-grid">
+        <article class="settings__quota-card">
+          <h3>Meine IP-Quota</h3>
+          <p class="settings__quota-num">{{ q.ipQuotaRemaining }} / 3</p>
+          <p class="settings__quota-desc">verbleibende Generierungen heute</p>
+        </article>
+        <article class="settings__quota-card">
+          <h3>System-weite Quota</h3>
+          <p class="settings__quota-num">{{ q.systemQuotaRemaining }} / 12</p>
+          <p class="settings__quota-desc">verbleibende Generierungen heute (alle Nutzer)</p>
+        </article>
+      </div>
+    </section>
+  } @else {
+    <p>Lade Quota-Informationen...</p>
+  }
+</main>

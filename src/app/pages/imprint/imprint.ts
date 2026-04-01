@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
+/** Static imprint / legal notice page */
 @Component({
   selector: 'app-imprint',
-  imports: [],
+  standalone: true,
   templateUrl: './imprint.html',
-  styleUrl: './imprint.scss',
+  styleUrl: './imprint.scss'
 })
 export class Imprint {}

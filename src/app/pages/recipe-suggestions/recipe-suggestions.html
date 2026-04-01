@@ -1,1 +1,37 @@
-<p>recipe-suggestions works!</p>
+@if (isLoading()) {
+  <app-loading />
+} @else if (error()) {
+  <section class="results-error" aria-live="assertive">
+    <p class="results-error__msg">{{ error() }}</p>
+    <a routerLink="/ingredients" class="btn btn--cream">Zurück zu Zutaten</a>
+  </section>
+} @else {
+  <section class="results" aria-labelledby="results-heading">
+    <div class="results__header">
+      <div class="results__text">
+        <h1 id="results-heading" class="results__title">The recipe results</h1>
+        <p class="results__sub">
+          We took what you have and let our AI do the thinking.
+          Here are 3 easy recipes you can make right now!
+        </p>
+        <div class="results__tags">
+          <span class="results__tag">{{ cuisineTag }}</span>
+          <span class="results__tag">{{ complexityTag }}</span>
+        </div>
+      </div>
+      <div class="results__visual" aria-hidden="true"></div>
+    </div>
+
+    <div class="results__cards" role="list">
+      @for (recipe of recipes(); track recipe.id; let i = $index) {
+        <div role="listitem">
+          <app-recipe-card [recipe]="recipe" variant="result" [index]="i" />
+        </div>
+      }
+    </div>
+
+    <div class="results__footer">
+      <a routerLink="/ingredients" class="results__regen">Neues Rezept generieren →</a>
+    </div>
+  </section>
+}

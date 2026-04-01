@@ -1,1 +1,63 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  // Colors
+  --color-olive:       #396039;
+  --color-green-mid:   #1E5515;
+  --color-green-dark:  #10310B;
+  --color-cream:       #FAF0E6;
+  --color-card:        #DBE0DB;
+  --color-input-bg:    rgba(57, 96, 57, 0.3);
+  --color-white:       #FFFFFF;
+  --color-green-pure:  #008000;
+
+  // Typography
+  --font-heading: 'Ubuntu', sans-serif;
+  --font-body:    'Quicksand', sans-serif;
+
+  // Font sizes
+  --text-h1:     104px;
+  --text-h1-mob:  64px;
+  --text-h2:      54px;
+  --text-h3:      48px;
+  --text-h4:      40px;
+  --text-card:    28px;
+  --text-h5:      24px;
+  --text-label:   20px;
+  --text-body:    18px;
+  --text-p16:     16px;
+  --text-small:   14px;
+
+  // Spacing
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  // Border radius
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-pill: 30px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-p16);
+  color: var(--color-green-dark);
+  background-color: var(--color-white);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; cursor: pointer; }
+
+ul { list-style: none; }
+
+button { font-family: var(--font-body); cursor: pointer; border: none; background: none; }
+
+img { max-width: 100%; display: block; }

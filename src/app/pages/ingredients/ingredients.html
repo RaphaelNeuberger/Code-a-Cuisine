@@ -1,1 +1,126 @@
-<p>ingredients works!</p>
+@if (step() === 1) {
+  <!-- Step 1: Hero + Ingredient Input -->
+  <section class="hero" aria-label="Hero-Bereich">
+    <div class="hero__content">
+      <p class="hero__subtitle">AI-Powered recipe generator</p>
+      <h1 class="hero__title">Code&nbsp;à&nbsp;Cuisine</h1>
+      <button class="btn btn--cream" type="button" (click)="goToStep2()" [disabled]="!canProceed">
+        Get started
+      </button>
+    </div>
+    <div class="hero__visuals" aria-hidden="true">
+      <div class="hero__circle hero__circle--1"></div>
+      <div class="hero__circle hero__circle--2"></div>
+      <div class="hero__circle hero__circle--3"></div>
+    </div>
+    <footer class="hero__cta-bottom">
+      <p class="hero__hungry">Hungry for inspiration?</p>
+      <a routerLink="/library" class="btn btn--ghost">Go to cookbook →</a>
+    </footer>
+  </section>
+
+  <section class="ingredients-step" aria-labelledby="ingredients-heading">
+    <h2 id="ingredients-heading" class="ingredients-step__heading">Generate recipe</h2>
+    <p class="ingredients-step__subtext">
+      Got random stuff in your kitchen? Pop it in—we've got the perfect recipe waiting.
+    </p>
+    <div class="ingredients-step__layout">
+      <app-ingredient-input (ingredientsChange)="onIngredientsChange($event)" />
+      <div class="ingredients-step__list-panel">
+        <p class="ingredients-step__list-label">Liste deiner Zutaten</p>
+        @if (ingredients.length === 0) {
+          <p class="ingredients-step__empty">Noch keine Zutaten hinzugefügt.</p>
+        } @else {
+          <ul aria-label="Hinzugefügte Zutaten">
+            @for (ing of ingredients; track ing.name) {
+              <li>• {{ ing.amount }}{{ ing.unit }} {{ ing.name }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+    <div class="ingredients-step__actions">
+      <button
+        class="btn btn--olive"
+        type="button"
+        [disabled]="!canProceed"
+        (click)="goToStep2()">
+        Next step
+      </button>
+    </div>
+  </section>
+}
+
+@if (step() === 2) {
+  <!-- Step 2: Preferences -->
+  <section class="preferences" aria-labelledby="prefs-heading">
+    <button class="preferences__back" type="button" (click)="goToStep1()">← Zutaten</button>
+    <h2 id="prefs-heading" class="preferences__heading">Choose your preferences</h2>
+
+    <div class="preferences__counters">
+      <div class="preferences__counter">
+        <p class="preferences__counter-label">Wie viele Portionen?</p>
+        <div class="preferences__counter-row">
+          <button type="button" (click)="decreasePortions()" aria-label="Portionen verringern">−</button>
+          <strong>{{ portions }}</strong>
+          <span>Portionen</span>
+          <button type="button" (click)="increasePortions()" aria-label="Portionen erhöhen">+</button>
+        </div>
+      </div>
+      <div class="preferences__counter">
+        <p class="preferences__counter-label">Wie viele kochen mit?</p>
+        <div class="preferences__counter-row">
+          <button type="button" (click)="decreaseChefs()" aria-label="Köche verringern">−</button>
+          <strong>{{ chefs }}</strong>
+          <span>{{ chefs === 1 ? 'Person' : 'Personen' }}</span>
+          <button type="button" (click)="increaseChefs()" aria-label="Köche erhöhen">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="preferences__form">
+      <fieldset class="preferences__group">
+        <legend class="preferences__group-title">🕐 Kochzeit</legend>
+        <div class="preferences__tags">
+          @for (c of complexities; track c) {
+            <div class="preferences__tag-wrap">
+              <app-tag
+                [label]="complexityLabels[c]"
+                [selected]="selectedComplexity === c"
+                (tagClick)="selectedComplexity = c" />
+              <span class="preferences__tag-desc">{{ complexityDesc[c] }}</span>
+            </div>
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="preferences__group">
+        <legend class="preferences__group-title">🌍 Küche</legend>
+        <div class="preferences__tags">
+          @for (cu of cuisines; track cu) {
+            <app-tag
+              [label]="cuisineLabels[cu]"
+              [selected]="selectedCuisine === cu"
+              (tagClick)="selectedCuisine = cu" />
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="preferences__group">
+        <legend class="preferences__group-title">🍴 Ernährung</legend>
+        <div class="preferences__tags">
+          @for (d of diets; track d) {
+            <app-tag
+              [label]="dietLabels[d]"
+              [selected]="selectedDiet === d"
+              (tagClick)="selectedDiet = d" />
+          }
+        </div>
+      </fieldset>
+    </div>
+
+    <button class="btn btn--olive" type="button" (click)="generate()">
+      Rezept generieren
+    </button>
+  </section>
+}

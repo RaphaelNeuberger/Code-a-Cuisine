@@ -238,6 +238,29 @@
   }
 }
 
+// Quota banner
+.quota-banner {
+  width: 100%;
+  max-width: 721px;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.5;
+
+  &--error {
+    background: rgba(180, 40, 40, 0.1);
+    border: 1px solid rgba(180, 40, 40, 0.4);
+    color: #8b1a1a;
+  }
+
+  &--warn {
+    background: rgba(180, 140, 0, 0.1);
+    border: 1px solid rgba(180, 140, 0, 0.4);
+    color: #7a5c00;
+  }
+}
+
 // Shared buttons
 .btn {
   padding: 16px 26px;

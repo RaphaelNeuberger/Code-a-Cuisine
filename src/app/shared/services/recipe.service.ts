@@ -51,6 +51,15 @@ export class RecipeService {
    * @param lastDoc - last document from previous page for cursor pagination
    */
   getAllRecipes(filter: RecipeFilter = {}, lastDoc?: DocumentSnapshot): Observable<Recipe[]> {
+    return this.getRecipePage(filter, lastDoc).pipe(map(r => r.recipes));
+  }
+
+  /**
+   * Returns a page of recipes together with the last DocumentSnapshot for cursor pagination.
+   * @param filter - optional cuisine/diet/complexity filter
+   * @param lastDoc - last document from previous page for cursor pagination
+   */
+  getRecipePage(filter: RecipeFilter = {}, lastDoc?: DocumentSnapshot): Observable<{ recipes: Recipe[]; lastSnap: DocumentSnapshot | undefined }> {
     const col = collection(this.firestore, COLLECTION);
     const constraints: QueryConstraint[] = [];
     if (filter.cuisine) constraints.push(where('cuisine', '==', filter.cuisine));
@@ -61,10 +70,13 @@ export class RecipeService {
     if (lastDoc) constraints.push(startAfter(lastDoc));
     const q = query(col, ...constraints);
     return from(getDocs(q)).pipe(
-      map(snap => snap.docs.map(d => ({
-        id: d.id, ...d.data(),
-        createdAt: (d.data()['createdAt'] as Timestamp).toDate()
-      } as Recipe)))
+      map(snap => ({
+        recipes: snap.docs.map(d => ({
+          id: d.id, ...d.data(),
+          createdAt: (d.data()['createdAt'] as Timestamp).toDate()
+        } as Recipe)),
+        lastSnap: snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : undefined
+      }))
     );
   }
 

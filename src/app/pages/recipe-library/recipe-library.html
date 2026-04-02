@@ -82,6 +82,17 @@
           </li>
         }
       </ul>
+      @if (hasMore()) {
+        <div class="library__pagination">
+          <button
+            class="library__load-more"
+            type="button"
+            [disabled]="isLoadingMore()"
+            (click)="loadMore()">
+            {{ isLoadingMore() ? 'Lädt...' : 'Mehr laden' }}
+          </button>
+        </div>
+      }
     }
   </section>
 

@@ -1,10 +1,11 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IngredientInput } from '../../shared/components/ingredient-input/ingredient-input';
 import { Tag } from '../../shared/components/tag/tag';
 import { RecipeStateService } from '../../shared/services/recipe-state.service';
+import { QuotaService } from '../../shared/services/quota.service';
 import { Ingredient, CuisineType, DietType, ComplexityType } from '../../shared/models/recipe.model';
-import { RecipeRequest } from '../../shared/models/request.model';
+import { RecipeRequest, QuotaInfo } from '../../shared/models/request.model';
 import { FormsModule } from '@angular/forms';
 
 const CUISINES: CuisineType[] = ['german', 'italian', 'japanese', 'indian', 'gourmet', 'fusion'];
@@ -32,11 +33,13 @@ const COMPLEXITY_DESC: Record<ComplexityType, string> = {
   templateUrl: './ingredients.html',
   styleUrl: './ingredients.scss'
 })
-export class Ingredients {
+export class Ingredients implements OnInit {
   private readonly state = inject(RecipeStateService);
   private readonly router = inject(Router);
+  private readonly quotaService = inject(QuotaService);
 
   readonly step = signal<1 | 2>(1);
+  readonly quota = signal<QuotaInfo | null>(null);
   readonly cuisines = CUISINES;
   readonly cuisineLabels = CUISINE_LABELS;
   readonly diets = DIETS;
@@ -51,6 +54,11 @@ export class Ingredients {
   selectedCuisine: CuisineType = 'italian';
   selectedDiet: DietType = 'none';
   selectedComplexity: ComplexityType = 'quick';
+
+  /** Loads quota info on init to show warning banner if quota is exhausted */
+  ngOnInit(): void {
+    this.quotaService.checkQuota().subscribe(q => this.quota.set(q));
+  }
 
   /** Updates ingredient list when IngredientInput emits changes */
   onIngredientsChange(list: Ingredient[]): void {

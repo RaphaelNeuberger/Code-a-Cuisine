@@ -188,6 +188,29 @@
   gap: var(--space-lg);
 }
 
+.library__pagination {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-xl);
+}
+
+.library__load-more {
+  background: var(--color-olive);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 600;
+  padding: 14px 40px;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  min-height: 52px;
+  transition: opacity 0.2s;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:not(:disabled):hover { opacity: 0.85; }
+}
+
 .library__footer {
   padding: 0 80px var(--space-xl);
   display: flex;

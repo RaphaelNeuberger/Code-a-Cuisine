@@ -119,7 +119,25 @@
       </fieldset>
     </div>
 
-    <button class="btn btn--olive" type="button" (click)="generate()">
+    @if (quota() && quota()!.ipQuotaRemaining === 0) {
+      <div class="quota-banner quota-banner--error" role="alert">
+        <strong>Tageslimit erreicht.</strong> Du hast heute bereits 3 Rezepte generiert. Versuche es morgen wieder.
+      </div>
+    } @else if (quota() && quota()!.systemQuotaRemaining === 0) {
+      <div class="quota-banner quota-banner--error" role="alert">
+        <strong>Systemlimit erreicht.</strong> Das tägliche Limit von 12 Generierungen wurde erreicht. Bitte versuche es morgen wieder.
+      </div>
+    } @else if (quota() && quota()!.ipQuotaRemaining <= 1) {
+      <div class="quota-banner quota-banner--warn" role="status">
+        Noch <strong>{{ quota()!.ipQuotaRemaining }}</strong> Generierung heute verfügbar.
+      </div>
+    }
+
+    <button
+      class="btn btn--olive"
+      type="button"
+      [disabled]="quota() !== null && (quota()!.ipQuotaRemaining === 0 || quota()!.systemQuotaRemaining === 0)"
+      (click)="generate()">
       Rezept generieren
     </button>
   </section>

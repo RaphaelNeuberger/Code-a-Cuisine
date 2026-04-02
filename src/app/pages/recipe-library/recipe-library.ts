@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DocumentSnapshot } from '@angular/fire/firestore';
 import { RecipeService, RecipeFilter } from '../../shared/services/recipe.service';
 import { RecipeCard } from '../../shared/components/recipe-card/recipe-card';
 import { Tag } from '../../shared/components/tag/tag';
@@ -28,7 +29,10 @@ export class RecipeLibrary implements OnInit {
   readonly cuisineCategories = CUISINES;
   readonly allRecipes = signal<Recipe[]>([]);
   readonly mostLiked = signal<Recipe[]>([]);
-  readonly currentPage = signal<number>(1);
+  readonly hasMore = signal<boolean>(false);
+  readonly isLoadingMore = signal<boolean>(false);
+
+  private lastSnap: DocumentSnapshot | undefined;
 
   readonly dietOptions: { value: DietType; label: string }[] = [
     { value: 'vegetarian', label: 'Vegetarisch' },
@@ -55,30 +59,49 @@ export class RecipeLibrary implements OnInit {
   /** Applies the given cuisine filter and reloads recipes */
   filterByCuisine(cuisine: CuisineType): void {
     this.selectedCuisine = this.selectedCuisine === cuisine ? undefined : cuisine;
-    this.currentPage.set(1);
     this.loadRecipes();
   }
 
   /** Applies the given diet filter and reloads recipes */
   filterByDiet(diet: DietType): void {
     this.selectedDiet = this.selectedDiet === diet ? undefined : diet;
-    this.currentPage.set(1);
     this.loadRecipes();
   }
 
   /** Applies the given complexity filter and reloads recipes */
   filterByComplexity(complexity: ComplexityType): void {
     this.selectedComplexity = this.selectedComplexity === complexity ? undefined : complexity;
-    this.currentPage.set(1);
     this.loadRecipes();
   }
 
-  /** Loads filtered recipes from Firestore */
+  /** Loads next page and appends to existing list */
+  loadMore(): void {
+    if (this.isLoadingMore()) return;
+    this.isLoadingMore.set(true);
+    this.recipeService.getRecipePage(this.activeFilter(), this.lastSnap).subscribe(({ recipes, lastSnap }) => {
+      this.allRecipes.update(prev => [...prev, ...recipes]);
+      this.lastSnap = lastSnap;
+      this.hasMore.set(recipes.length === 20);
+      this.isLoadingMore.set(false);
+    });
+  }
+
+  /** Resets and loads the first page of recipes with current filters */
   private loadRecipes(): void {
+    this.lastSnap = undefined;
+    this.recipeService.getRecipePage(this.activeFilter()).subscribe(({ recipes, lastSnap }) => {
+      this.allRecipes.set(recipes);
+      this.lastSnap = lastSnap;
+      this.hasMore.set(recipes.length === 20);
+    });
+  }
+
+  /** Builds the current filter object */
+  private activeFilter(): RecipeFilter {
     const filter: RecipeFilter = {};
     if (this.selectedCuisine) filter.cuisine = this.selectedCuisine;
     if (this.selectedDiet) filter.diet = this.selectedDiet;
     if (this.selectedComplexity) filter.complexity = this.selectedComplexity;
-    this.recipeService.getAllRecipes(filter).subscribe(r => this.allRecipes.set(r));
+    return filter;
   }
 }

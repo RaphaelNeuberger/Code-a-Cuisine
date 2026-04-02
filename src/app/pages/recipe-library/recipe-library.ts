@@ -5,13 +5,13 @@ import { RecipeCard } from '../../shared/components/recipe-card/recipe-card';
 import { Tag } from '../../shared/components/tag/tag';
 import { Recipe, CuisineType, DietType, ComplexityType } from '../../shared/models/recipe.model';
 
-const CUISINES: { value: CuisineType; label: string; emoji: string }[] = [
-  { value: 'italian', label: 'Italian cuisine', emoji: '🍝' },
-  { value: 'german', label: 'German cuisine', emoji: '🥨' },
-  { value: 'japanese', label: 'Japanese cuisine', emoji: '🥢' },
-  { value: 'indian', label: 'Indian cuisine', emoji: '🍛' },
-  { value: 'gourmet', label: 'Gourmet cuisine', emoji: '✨' },
-  { value: 'fusion', label: 'Fusion cuisine', emoji: '🍢' }
+const CUISINES: { value: CuisineType; label: string; emoji: string; img: string }[] = [
+  { value: 'italian',  label: 'Italian cuisine',  emoji: '🍝', img: 'assets/cuisine/italian.jpg' },
+  { value: 'german',   label: 'German cuisine',   emoji: '🥨', img: 'assets/cuisine/german.jpg' },
+  { value: 'japanese', label: 'Japanese cuisine', emoji: '🥢', img: 'assets/cuisine/japanese.jpg' },
+  { value: 'indian',   label: 'Indian cuisine',   emoji: '🍛', img: 'assets/cuisine/indian.jpg' },
+  { value: 'gourmet',  label: 'Gourmet cuisine',  emoji: '✨', img: 'assets/cuisine/gourmet.jpg' },
+  { value: 'fusion',   label: 'Fusion cuisine',   emoji: '🍢', img: 'assets/cuisine/fusion.jpg' }
 ];
 
 /** Cookbook library — shows cuisine categories, most liked, and filterable recipe grid */

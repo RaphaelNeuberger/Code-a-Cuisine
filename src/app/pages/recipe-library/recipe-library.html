@@ -39,7 +39,7 @@
             (click)="filterByCuisine(cat.value)"
             [attr.aria-pressed]="selectedCuisine === cat.value">
             <span class="library__cat-label">{{ cat.label }} {{ cat.emoji }}</span>
-            <div class="library__cat-img" [attr.aria-label]="cat.label"></div>
+            <img class="library__cat-img" [src]="cat.img" [alt]="cat.label" [title]="cat.label">
           </button>
         </li>
       }

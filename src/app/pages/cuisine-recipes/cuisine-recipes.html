@@ -1,0 +1,73 @@
+<div class="cuisine">
+
+  <div class="cuisine__nav">
+    <a routerLink="/library" class="cuisine__back">← Cookbook</a>
+  </div>
+
+  <div class="cuisine__generate-row">
+    <a routerLink="/ingredients" class="btn btn--olive">Generate a recipe</a>
+  </div>
+
+  <div class="cuisine__hero">
+    <img [src]="cuisineHero" [alt]="cuisineLabel" [title]="cuisineLabel" [attr.title]="cuisineLabel" class="cuisine__hero-img" />
+    <h1 class="cuisine__hero-title">{{ cuisineLabel }}</h1>
+  </div>
+
+  <section class="cuisine__list" aria-label="Recipes">
+    @if (isLoading()) {
+      <p class="cuisine__loading">Loading...</p>
+    } @else if (allRecipes().length === 0) {
+      <p class="cuisine__empty">No recipes found for this cuisine yet.</p>
+    } @else {
+      @for (r of recipes(); track r.id; let i = $index) {
+        <a [routerLink]="['/recipe', r.id]" [queryParams]="{ from: 'library' }" class="cuisine__recipe">
+          <div class="cuisine__recipe-left">
+            <span class="cuisine__recipe-num">{{ (currentPage() - 1) * 15 + i + 1 }}.</span>
+            <div class="cuisine__recipe-info">
+              <p class="cuisine__recipe-time">
+                <img src="assets/clock.svg" alt="" width="16" height="16" aria-hidden="true" />
+                Cooking time: {{ r.cookingTimeMinutes }}min
+              </p>
+              <p class="cuisine__recipe-title">{{ r.title }}</p>
+            </div>
+          </div>
+          <div class="cuisine__recipe-tags">
+            @if (r.diet && r.diet !== 'none') {
+              <span class="cuisine__tag">{{ r.diet }}</span>
+            }
+            <span class="cuisine__tag">{{ r.complexity }}</span>
+            <button
+              type="button"
+              class="cuisine__tag cuisine__tag--hearts"
+              (click)="heartRecipe($event, r.id!)"
+              [disabled]="isHearted(r.id!)"
+              [attr.aria-pressed]="isHearted(r.id!)"
+              aria-label="Like recipe">
+              <img src="assets/favorite.svg" alt="" width="16" height="16" aria-hidden="true" />
+              {{ r.hearts }}
+            </button>
+          </div>
+        </a>
+      }
+
+      @if (totalPages() > 1) {
+        <nav class="cuisine__pagination" aria-label="Pagination">
+          <button type="button" class="cuisine__page-btn" (click)="prev()" [disabled]="currentPage() === 1">&lt;</button>
+          @for (p of pageNumbers(); track $index) {
+            @if (p === '...') {
+              <span class="cuisine__page-dots">...</span>
+            } @else {
+              <button
+                type="button"
+                class="cuisine__page-btn"
+                [class.cuisine__page-btn--active]="p === currentPage()"
+                (click)="goToPage(p)">{{ p }}</button>
+            }
+          }
+          <button type="button" class="cuisine__page-btn" (click)="next()" [disabled]="currentPage() === totalPages()">&gt;</button>
+        </nav>
+      }
+    }
+  </section>
+
+</div>

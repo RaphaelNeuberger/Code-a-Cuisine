@@ -1,18 +1,18 @@
 <section class="ingredient-input">
   <div class="ingredient-input__form">
     <div class="ingredient-input__field-group">
-      <label for="ingredient-name" class="ingredient-input__label">Zutat</label>
+      <label for="ingredient-name" class="ingredient-input__label">Ingredient</label>
       <input
         id="ingredient-name"
         type="text"
         class="ingredient-input__text"
         [(ngModel)]="name"
-        placeholder="z.B. Pasta"
+        placeholder="e.g. Pasta"
         (keyup.enter)="addIngredient()"
         autocomplete="off">
     </div>
     <div class="ingredient-input__size-group">
-      <label for="ingredient-amount" class="ingredient-input__label">Menge</label>
+      <label for="ingredient-amount" class="ingredient-input__label">Quantity</label>
       <div class="ingredient-input__size-row">
         <input
           id="ingredient-amount"
@@ -20,7 +20,7 @@
           class="ingredient-input__amount"
           [(ngModel)]="amount"
           min="1">
-        <select class="ingredient-input__unit" [(ngModel)]="unit" aria-label="Einheit">
+        <select class="ingredient-input__unit" [(ngModel)]="unit" aria-label="Unit">
           @for (u of units; track u) {
             <option [value]="u">{{ u }}</option>
           }
@@ -29,24 +29,10 @@
           class="ingredient-input__add"
           type="button"
           (click)="addIngredient()"
-          aria-label="Zutat hinzufügen">+</button>
+          aria-label="Add ingredient">+</button>
       </div>
     </div>
   </div>
 
-  @if (ingredients().length > 0) {
-    <ul class="ingredient-input__list" aria-label="Deine Zutaten">
-      @for (ing of ingredients(); track ing.name; let i = $index) {
-        <li class="ingredient-input__item">
-          <span class="ingredient-input__bullet" aria-hidden="true">•</span>
-          <span class="ingredient-input__qty">{{ ing.amount }}{{ ing.unit }}</span>
-          <span class="ingredient-input__name">{{ ing.name }}</span>
-          <div class="ingredient-input__actions">
-            <button type="button" (click)="startEdit(i)" aria-label="Bearbeiten">✏</button>
-            <button type="button" (click)="removeIngredient(i)" aria-label="Entfernen">🗑</button>
-          </div>
-        </li>
-      }
-    </ul>
-  }
+
 </section>

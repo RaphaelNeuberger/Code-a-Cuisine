@@ -1,17 +1,18 @@
 <article class="recipe-card" [class.recipe-card--library]="variant() === 'library'">
   @if (variant() === 'result') {
     <header class="recipe-card__header">
+      <img src="assets/recipe.svg" alt="" class="recipe-card__icon" width="20" height="20" />
       <span class="recipe-card__number">Recipe {{ index() + 1 }}</span>
     </header>
     <div class="recipe-card__body">
       <h3 class="recipe-card__title">{{ recipe().title }}</h3>
       <p class="recipe-card__time">
-        <span aria-hidden="true">🕐</span>
-        Kochzeit: {{ recipe().cookingTimeMinutes }}min
+        <img src="assets/clock.svg" alt="" width="16" height="16" aria-hidden="true" />
+        Cooking time: {{ recipe().cookingTimeMinutes }}min
       </p>
     </div>
     <footer class="recipe-card__footer">
-      <a [routerLink]="['/recipe', recipe().id]" class="recipe-card__btn">View</a>
+      <a [routerLink]="['/recipe', recipe().id]" [queryParams]="{ from: 'suggestions' }" class="recipe-card__btn">View</a>
     </footer>
   }
   @if (variant() === 'library') {

@@ -43,9 +43,9 @@ export interface Recipe {
   portions: number;
   chefs: number;
   ingredients: Ingredient[];
-  extraIngredients: Ingredient[];
+  extraIngredients?: Ingredient[];
   steps: RecipeStep[];
-  nutrition: NutritionFacts;
+  nutrition?: NutritionFacts;
   hearts: number;
   thumbnailUrl?: string;
   createdAt: Date;

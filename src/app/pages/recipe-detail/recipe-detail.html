@@ -1,118 +1,153 @@
 @if (recipe(); as r) {
+  <a [routerLink]="backLink().url" class="detail__back">
+    <span class="detail__back-arrow">←</span> {{ backLink().label }}
+  </a>
+
   <article class="detail">
-    <header class="detail__header">
+
+    <!-- Name + Nutrition card -->
+    <div class="detail__card">
       <div class="detail__meta">
-        <p class="detail__time">🕐 Kochzeit: {{ r.cookingTimeMinutes }}min</p>
+        <p class="detail__time">
+          <img src="assets/clock.svg" alt="" width="24" height="24" aria-hidden="true" />
+          Cooking time: {{ r.cookingTimeMinutes }}min
+        </p>
         <h1 class="detail__title">{{ r.title }}</h1>
+        <div class="detail__info-row">
+          <div class="detail__info-item">
+            <span class="detail__info-label">How many portions?</span>
+            <span class="detail__info-value">{{ r.portions }} Portions</span>
+          </div>
+          <div class="detail__info-item">
+            <span class="detail__info-label">How many chefs?</span>
+            <span class="detail__info-value">{{ r.chefs }} People</span>
+          </div>
+        </div>
         <div class="detail__chefs">
-          <span>Köche: {{ r.chefs }}</span>
           @for (n of [].constructor(r.chefs); track $index) {
             <span class="detail__chef-badge detail__chef-badge--{{ $index + 1 }}">
               Chef {{ $index + 1 }}
             </span>
           }
         </div>
+      </div>
+
+      <div class="detail__aside">
         <div class="detail__tags">
           <span class="detail__tag">{{ r.diet }}</span>
           <span class="detail__tag">{{ r.complexity }}</span>
-          <span class="detail__hearts">♥ {{ r.hearts }}</span>
+          <button
+            type="button"
+            class="detail__tag detail__tag--hearts"
+            (click)="heart(r.id!)"
+            [disabled]="hearted()"
+            [attr.aria-pressed]="hearted()"
+            aria-label="Like recipe">
+            <img src="assets/favorite.svg" alt="" width="20" height="20" aria-hidden="true" />
+            {{ r.hearts }}
+          </button>
         </div>
+        @if (r.nutrition) {
+          <div class="detail__nutrition" aria-label="Nutritional information">
+            <p class="detail__nutrition-title">Nutritional information</p>
+            <div class="detail__nutrition-grid">
+              <div class="detail__nutrition-item">
+                <strong>Energie</strong>
+                <span>{{ r.nutrition.calories }} kcal</span>
+              </div>
+              <div class="detail__nutrition-item">
+                <strong>Protein</strong>
+                <span>{{ r.nutrition.protein }}g</span>
+              </div>
+              <div class="detail__nutrition-item">
+                <strong>Fat</strong>
+                <span>{{ r.nutrition.fat }}g</span>
+              </div>
+              <div class="detail__nutrition-item">
+                <strong>Carbs</strong>
+                <span>{{ r.nutrition.carbs }}g</span>
+              </div>
+            </div>
+          </div>
+        }
       </div>
-      <aside class="detail__nutrition" aria-label="Nährwertinformationen">
-        <p class="detail__nutrition-title">Nährwertinformation</p>
-        <div class="detail__nutrition-grid">
-          <div class="detail__nutrition-item">
-            <strong>Energie</strong>
-            <span>{{ r.nutrition.calories }} kcal</span>
-            <small>gesamt: {{ totalNutrition(r.nutrition.calories, r.portions) }} kcal</small>
-          </div>
-          <div class="detail__nutrition-item">
-            <strong>Protein</strong>
-            <span>{{ r.nutrition.protein }}g</span>
-            <small>gesamt: {{ totalNutrition(r.nutrition.protein, r.portions) }}g</small>
-          </div>
-          <div class="detail__nutrition-item">
-            <strong>Fett</strong>
-            <span>{{ r.nutrition.fat }}g</span>
-            <small>gesamt: {{ totalNutrition(r.nutrition.fat, r.portions) }}g</small>
-          </div>
-          <div class="detail__nutrition-item">
-            <strong>Kohlenhydrate</strong>
-            <span>{{ r.nutrition.carbs }}g</span>
-            <small>gesamt: {{ totalNutrition(r.nutrition.carbs, r.portions) }}g</small>
-          </div>
-        </div>
-      </aside>
-    </header>
+    </div>
 
-    <section class="detail__ingredients" aria-labelledby="ingredients-heading">
-      <h2 id="ingredients-heading" class="detail__section-title">Ingredients</h2>
+    <!-- Ingredients -->
+    <section class="detail__section" aria-labelledby="ingredients-heading">
+      <div class="detail__section-banner">
+        <img src="assets/hero-ingredients.png" alt="" class="detail__section-banner-img" />
+        <h2 id="ingredients-heading" class="detail__section-title">Ingredients</h2>
+      </div>
       <div class="detail__ingredient-cols">
-        <div>
-          <h3 class="detail__ingredient-sub">Deine Zutaten</h3>
-          <ul>
-            @for (ing of r.ingredients; track ing.name) {
-              <li>• {{ ing.amount }}{{ ing.unit }} {{ ing.name }}</li>
-            }
-          </ul>
+        <div class="detail__ingredient-col">
+          <h3 class="detail__ingredient-sub">Your ingredients</h3>
+          <ul class="detail__ingredient-list">@for (ing of r.ingredients; track ing.name) {
+              <li><span class="detail__ing-amount">{{ ing.amount }}{{ ing.unit }}</span><span>{{ ing.name }}</span></li>
+            }</ul>
         </div>
-        @if (r.extraIngredients.length > 0) {
-          <div>
-            <h3 class="detail__ingredient-sub">Extra Zutaten</h3>
-            <ul>
-              @for (ing of r.extraIngredients; track ing.name) {
-                <li>• {{ ing.amount }}{{ ing.unit }} {{ ing.name }}</li>
-              }
-            </ul>
+        @if (r.extraIngredients && r.extraIngredients.length > 0) {
+          <div class="detail__ingredient-col">
+            <h3 class="detail__ingredient-sub">Extra ingredients</h3>
+            <ul class="detail__ingredient-list">@for (ing of r.extraIngredients; track ing.name) {
+                <li><span class="detail__ing-amount">{{ ing.amount }}{{ ing.unit }}</span><span>{{ ing.name }}</span></li>
+              }</ul>
           </div>
         }
       </div>
     </section>
 
-    <section class="detail__directions" aria-labelledby="directions-heading">
-      <h2 id="directions-heading" class="detail__section-title">Directions</h2>
-      <ol class="detail__steps">
-        @for (step of r.steps; track step.stepNumber) {
-          <li class="detail__step" [class.detail__step--parallel]="step.isParallel">
+    <!-- Directions -->
+    <section class="detail__section" aria-labelledby="directions-heading">
+      <div class="detail__section-banner">
+        <img src="assets/hero-directions.png" alt="" class="detail__section-banner-img" />
+        <h2 id="directions-heading" class="detail__section-title">Directions</h2>
+      </div>
+      <ol class="detail__steps">@for (step of r.steps; track step.stepNumber) {<li class="detail__step" [class.detail__step--parallel]="step.isParallel">
             <div class="detail__step-header">
               <span class="detail__step-num">{{ step.stepNumber }}.</span>
               <span class="detail__step-title">{{ step.title }}</span>
               @if (step.chef) {
-                <span class="step__chef {{ chefClass(step.chef) }}">Chef {{ step.chef }}</span>
+                <span class="detail__chef-badge detail__chef-badge--{{ step.chef }}">Chef {{ step.chef }}</span>
               }
               @if (step.isParallel) {
-                <span class="detail__step-parallel" aria-label="Paralleler Schritt">⚡ Parallel</span>
+                <span class="detail__step-parallel" aria-label="Parallel step">⚡ Parallel</span>
               }
             </div>
             <p class="detail__step-desc">{{ step.description }}</p>
-          </li>
-        }
+          </li>}
       </ol>
     </section>
 
-    <footer class="detail__footer">
-      <div class="detail__heart-cta">
-        <p>
-          <strong>Gerade fertig gekocht?</strong>
-          Gib ein Herz, damit andere wissen dass es lecker ist.
-        </p>
-        <button
-          class="detail__heart-btn"
-          type="button"
-          [disabled]="hearted()"
-          (click)="heart(r.id!)"
-          [attr.aria-pressed]="hearted()"
-          aria-label="Rezept liken">
-          {{ hearted() ? '♥' : '♡' }}
-        </button>
-      </div>
-      <div class="detail__cta">
-        <p>Find inspiration for your next culinary adventure!</p>
-        <a routerLink="/library" class="btn btn--olive">Kochbuch</a>
-      </div>
-      <a routerLink="/ingredients" class="detail__regen">Neues Rezept generieren →</a>
-    </footer>
+    <!-- Heart CTA -->
+    <div class="detail__heart-cta">
+      <p>
+        <strong>Just finished this meal?</strong>
+        Give it a heart, so that the others know this is delicious.
+      </p>
+      <button
+        class="detail__heart-btn"
+        type="button"
+        [disabled]="hearted()"
+        (click)="heart(r.id!)"
+        [attr.aria-pressed]="hearted()"
+        aria-label="Like recipe">
+        {{ hearted() ? '♥' : '♡' }}
+      </button>
+    </div>
+
+    <!-- Cookbook CTA -->
+    <div class="detail__cta">
+      <p>Find inspiration for your next culinary adventure!</p>
+      <a routerLink="/library" class="btn btn--olive">Cookbook</a>
+    </div>
+
+    <!-- Regen link -->
+    <div class="detail__regen-row">
+      <a routerLink="/ingredients" class="detail__regen">Generate new recipe →</a>
+    </div>
+
   </article>
 } @else {
-  <p class="detail__loading">Laden...</p>
+  <p class="detail__loading">Loading...</p>
 }

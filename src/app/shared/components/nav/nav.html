@@ -1,22 +1,5 @@
 <header class="nav">
   <a class="nav__logo" routerLink="/" aria-label="Code à Cuisine – Startseite">
-    <img src="assets/logo.svg" alt="Code à Cuisine Logo" width="142" height="48">
+    <img [src]="logoSrc" alt="Code à Cuisine Logo" width="142" height="48" />
   </a>
-  <nav aria-label="Hauptnavigation">
-    <ul class="nav__links">
-      <li><a routerLink="/ingredients" routerLinkActive="nav__link--active">Zutaten</a></li>
-      <li><a routerLink="/library" routerLinkActive="nav__link--active">Kochbuch</a></li>
-      <li><a routerLink="/settings" routerLinkActive="nav__link--active">Einstellungen</a></li>
-      <li><a routerLink="/imprint" routerLinkActive="nav__link--active">Impressum</a></li>
-    </ul>
-  </nav>
-  <button class="nav__burger" aria-label="Menü öffnen" (click)="menuOpen = !menuOpen">☰</button>
-  <nav class="nav__mobile" [class.nav__mobile--open]="menuOpen" aria-label="Mobile Navigation">
-    <ul>
-      <li><a routerLink="/ingredients" (click)="menuOpen = false">Zutaten</a></li>
-      <li><a routerLink="/library" (click)="menuOpen = false">Kochbuch</a></li>
-      <li><a routerLink="/settings" (click)="menuOpen = false">Einstellungen</a></li>
-      <li><a routerLink="/imprint" (click)="menuOpen = false">Impressum</a></li>
-    </ul>
-  </nav>
 </header>

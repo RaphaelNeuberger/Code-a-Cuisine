@@ -23,10 +23,18 @@ export class IngredientInput {
   unit = 'g';
   editIndex: number | null = null;
 
-  /** Adds current input values as a new ingredient to the list */
+  /** Adds or updates an ingredient */
   addIngredient(): void {
     if (!this.name.trim()) return;
-    const updated = [...this.ingredients(), { name: this.name.trim(), amount: this.amount, unit: this.unit }];
+    let updated: Ingredient[];
+    if (this.editIndex !== null) {
+      updated = this.ingredients().map((ing, i) =>
+        i === this.editIndex ? { name: this.name.trim(), amount: this.amount, unit: this.unit } : ing
+      );
+      this.editIndex = null;
+    } else {
+      updated = [...this.ingredients(), { name: this.name.trim(), amount: this.amount, unit: this.unit }];
+    }
     this.ingredients.set(updated);
     this.ingredientsChange.emit(updated);
     this.name = '';
@@ -35,18 +43,18 @@ export class IngredientInput {
 
   /** Removes ingredient at the given index from the list */
   removeIngredient(index: number): void {
+    if (this.editIndex === index) this.editIndex = null;
     const updated = this.ingredients().filter((_, i) => i !== index);
     this.ingredients.set(updated);
     this.ingredientsChange.emit(updated);
   }
 
-  /** Loads an ingredient into the form fields for editing */
+  /** Loads an ingredient into the form fields for editing (item stays in list until saved) */
   startEdit(index: number): void {
     const ing = this.ingredients()[index];
     this.name = ing.name;
     this.amount = ing.amount;
     this.unit = ing.unit;
     this.editIndex = index;
-    this.removeIngredient(index);
   }
 }

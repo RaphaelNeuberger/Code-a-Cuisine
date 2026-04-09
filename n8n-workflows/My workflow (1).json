@@ -1,0 +1,136 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Du bist ein Rezept-KI. Du MUSST genau 3 Rezepte erstellen.\nWICHTIG: Verwende AUSSCHLIESSLICH die Zutaten aus der Liste des Nutzers.\nErfinde KEINE neuen Zutaten. Kein Gemüse, kein Fleisch, keine Gewürze die nicht angegeben sind.\nErlaubt sind nur Zusätze: Wasser, Salz, Pfeffer, Öl.\nAntworte AUSSCHLIESSLICH mit JSON, kein Text davor oder danach.\n\nAntworte NUR mit validem JSON:\n{\n  \"recipes\": [{\n    \"title\": \"...\",\n    \"cookingTimeMinutes\": 20,\n    \"cuisine\": \"italian\",\n    \"diet\": \"none\",\n    \"complexity\": \"quick\",\n    \"portions\": 2,\n    \"chefs\": 1,\n    \"ingredients\": [{ \"name\": \"...\", \"amount\": 1, \"unit\": \"...\" }],\n    \"extraIngredients\": [],\n    \"steps\": [{ \"stepNumber\": 1, \"title\": \"...\", \"description\": \"...\" }],\n    \"nutrition\": { \"calories\": 400, \"protein\": 20, \"fat\": 15, \"carbs\": 50 },\n    \"hearts\": 0,\n    \"createdAt\": \"2026-04-08T00:00:00.000Z\"\n  }]\n}"
+            },
+            {
+              "content": "=Meine verfügbaren Zutaten sind: {{ $('Webhook').item.json.body.ingredients.map(i => i.name).join(', ') }}\n\nWICHTIG: Verwende ALLE diese Zutaten in den Rezepten. Jede Zutat aus der Liste MUSS in mindestens einem Rezept vorkommen.\nZusätzlich erlaubt: Wasser, Salz, Pfeffer, Öl.\nKeine anderen Zutaten.\n\nPortionen: {{ $('Webhook').item.json.body.portions }}\nKüche: {{ $('Webhook').item.json.body.cuisine }}\nDiät: {{ $('Webhook').item.json.body.diet }}\nKomplexität: {{ $('Webhook').item.json.body.complexity }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5a7a722c-2ad0-486e-8518-89b653e42895",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "B2DnZpzAyR8SZoEN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.output[0].content[0].text;\n\nconst clean = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n\nconst parsed = JSON.parse(clean);\n\nreturn [{ json: parsed }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "86f9f189-7c11-4707-aaf2-558b406a8663",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "cf9043e9-7759-4456-a11f-db1f0c48bc5b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c745b865-85a0-404c-9b24-e996e7a0bbe7",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e73d3c2d-3b66-4c33-9d85-7940a4cec394",
+      "name": "Webhook",
+      "webhookId": "c745b865-85a0-404c-9b24-e996e7a0bbe7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "231f5a48-6bc0-49e0-a890-3a47a3214e04",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34aae92629158420ef6e672234e1df8cd4c0bbc5b494e97aa093107f7b10f299"
+  },
+  "id": "Fn3GhY9u9fwjrdZX",
+  "tags": []
+}

@@ -1,0 +1,100 @@
+// Ingredients step
+.ingredients-step {
+  padding: var(--space-3xl) 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-lg);
+
+  &__heading {
+    font-size: var(--text-h2);
+    font-weight: 600;
+    color: var(--color-green-mid);
+    text-align: center;
+  }
+
+  &__subtext {
+    font-size: var(--text-h5);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  &__layout {
+    display: flex;
+    gap: var(--space-xl);
+    width: 100%;
+    max-width: var(--content-max-width);
+    align-items: flex-start;
+
+    app-ingredient-input { flex: 1; }
+  }
+
+  &__list-panel {
+    flex: 1;
+    background: var(--color-input-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+  }
+
+  &__list-label {
+    font-size: var(--text-label);
+    font-weight: 500;
+    margin-bottom: var(--space-md);
+  }
+
+  &__empty { color: rgba(16,49,11,0.5); font-size: var(--text-p16); }
+
+  &__actions { display: flex; justify-content: flex-end; width: 100%; max-width: var(--content-max-width); }
+
+  @media (max-width: 768px) {
+    padding: var(--space-lg) var(--space-md);
+    &__layout { flex-direction: column; }
+  }
+}
+
+// Ingredient list items (rendered outside ingredient-input component)
+.ingredient-input {
+  &__list { display: flex; flex-direction: column; gap: 6px; }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: 2px 4px;
+  }
+
+  &__qty { font-size: var(--text-body); font-weight: 500; min-width: 60px; }
+  &__name { font-size: var(--text-body); flex: 1; }
+  &__actions { display: flex; gap: var(--space-md); }
+  &__actions button { font-size: 16px; background: none; border: none; cursor: pointer; min-height: 44px; }
+}
+
+// Shared buttons
+.btn {
+  padding: 16px 26px;
+  font-family: var(--font-body);
+  font-size: var(--text-h5);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-sm);
+  min-height: 60px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &--olive { background: var(--color-olive); color: var(--color-cream); }
+  &--cream { background: var(--color-cream); color: var(--color-green-pure); border-radius: 0px; /* opacity: 0.5; */ }
+  &--cream:hover { background: #FAE0C6; font-weight: bold; }
+  &--ghost {
+    background: none;
+    border: none;
+    color: var(--color-cream);
+    font-size: var(--text-label);
+    font-weight: 500;
+    padding: 16px 26px;
+    border-radius: 5px;
+  }
+
+  // &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

@@ -1,30 +1,32 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
 import { DocumentSnapshot } from '@angular/fire/firestore';
 import { RecipeService, RecipeFilter } from '../../shared/services/recipe.service';
-import { RecipeCard } from '../../shared/components/recipe-card/recipe-card';
-import { Tag } from '../../shared/components/tag/tag';
 import { Recipe, CuisineType, DietType, ComplexityType } from '../../shared/models/recipe.model';
 
 const CUISINES: { value: CuisineType; label: string; emoji: string; img: string }[] = [
-  { value: 'italian',  label: 'Italian cuisine',  emoji: '🍝', img: 'assets/cuisine/italian.jpg' },
-  { value: 'german',   label: 'German cuisine',   emoji: '🥨', img: 'assets/cuisine/german.jpg' },
-  { value: 'japanese', label: 'Japanese cuisine', emoji: '🥢', img: 'assets/cuisine/japanese.jpg' },
-  { value: 'indian',   label: 'Indian cuisine',   emoji: '🍛', img: 'assets/cuisine/indian.jpg' },
-  { value: 'gourmet',  label: 'Gourmet cuisine',  emoji: '✨', img: 'assets/cuisine/gourmet.jpg' },
-  { value: 'fusion',   label: 'Fusion cuisine',   emoji: '🍢', img: 'assets/cuisine/fusion.jpg' }
+  { value: 'italian',  label: 'Italian cuisine',  emoji: '🤌', img: 'assets/cuisine/italian.png' },
+  { value: 'german',   label: 'German cuisine',   emoji: '🥨', img: 'assets/cuisine/german.png' },
+  { value: 'japanese', label: 'Japanese cuisine', emoji: '🥢', img: 'assets/cuisine/japanese.png' },
+  { value: 'indian',   label: 'Indian cuisine',   emoji: '✨', img: 'assets/cuisine/indian.png' },
+  { value: 'gourmet',  label: 'Gourmet cuisine',  emoji: '🍛', img: 'assets/cuisine/gourmet.png' },
+  { value: 'fusion',   label: 'Fusion cuisine',   emoji: '🍢', img: 'assets/cuisine/fusion.png' }
 ];
 
 /** Cookbook library — shows cuisine categories, most liked, and filterable recipe grid */
 @Component({
   selector: 'app-recipe-library',
   standalone: true,
-  imports: [RouterLink, RecipeCard, Tag],
+  imports: [RouterLink],
   templateUrl: './recipe-library.html',
   styleUrl: './recipe-library.scss'
 })
 export class RecipeLibrary implements OnInit {
   private readonly recipeService = inject(RecipeService);
+  private readonly location = inject(Location);
+
+  goBack(): void { this.location.back(); }
 
   readonly cuisineCategories = CUISINES;
   readonly allRecipes = signal<Recipe[]>([]);
@@ -35,16 +37,16 @@ export class RecipeLibrary implements OnInit {
   private lastSnap: DocumentSnapshot | undefined;
 
   readonly dietOptions: { value: DietType; label: string }[] = [
-    { value: 'vegetarian', label: 'Vegetarisch' },
+    { value: 'vegetarian', label: 'Vegetarian' },
     { value: 'vegan', label: 'Vegan' },
     { value: 'keto', label: 'Keto' },
-    { value: 'none', label: 'Alle' }
+    { value: 'none', label: 'All' }
   ];
 
   readonly complexityOptions: { value: ComplexityType; label: string }[] = [
-    { value: 'quick', label: 'Schnell' },
-    { value: 'medium', label: 'Mittel' },
-    { value: 'complex', label: 'Aufwendig' }
+    { value: 'quick', label: 'Quick' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'complex', label: 'Complex' }
   ];
 
   selectedCuisine: CuisineType | undefined;

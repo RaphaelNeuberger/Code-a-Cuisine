@@ -1,93 +1,65 @@
 @if (step() === 1) {
   <!-- Step 1: Hero + Ingredient Input -->
-  <section class="hero" aria-label="Hero-Bereich">
+  <section class="hero" aria-label="Hero section">
     <div class="hero__content">
       <p class="hero__subtitle">AI-Powered recipe generator</p>
       <h1 class="hero__title">Code&nbsp;à&nbsp;Cuisine</h1>
-      <button class="btn btn--cream" type="button" (click)="goToStep2()" [disabled]="!canProceed">
-        Get started
-      </button>
+      <a routerLink="/generate-recipe" class="btn btn--cream">Get started</a>
     </div>
     <div class="hero__visuals" aria-hidden="true">
-      <img class="hero__food hero__food--1" src="assets/hero-food-1.jpg" alt="">
-      <img class="hero__food hero__food--2" src="assets/hero-food-2.jpg" alt="">
-      <img class="hero__food hero__food--3" src="assets/hero-food-3.jpg" alt="">
+      <img class="hero__food hero__food--1" src="assets/food1.png" alt="" />
+      <img class="hero__food hero__food--2" src="assets/food2.png" alt="" />
+      <img class="hero__food hero__food--3" src="assets/food3.png" alt="" />
     </div>
     <footer class="hero__cta-bottom">
       <p class="hero__hungry">Hungry for inspiration?</p>
       <a routerLink="/library" class="btn btn--ghost">Go to cookbook →</a>
     </footer>
   </section>
-
-  <section class="ingredients-step" aria-labelledby="ingredients-heading">
-    <h2 id="ingredients-heading" class="ingredients-step__heading">Generate recipe</h2>
-    <p class="ingredients-step__subtext">
-      Got random stuff in your kitchen? Pop it in—we've got the perfect recipe waiting.
-    </p>
-    <div class="ingredients-step__layout">
-      <app-ingredient-input (ingredientsChange)="onIngredientsChange($event)" />
-      <div class="ingredients-step__list-panel">
-        <p class="ingredients-step__list-label">Liste deiner Zutaten</p>
-        @if (ingredients.length === 0) {
-          <p class="ingredients-step__empty">Noch keine Zutaten hinzugefügt.</p>
-        } @else {
-          <ul aria-label="Hinzugefügte Zutaten">
-            @for (ing of ingredients; track ing.name) {
-              <li>• {{ ing.amount }}{{ ing.unit }} {{ ing.name }}</li>
-            }
-          </ul>
-        }
-      </div>
-    </div>
-    <div class="ingredients-step__actions">
-      <button
-        class="btn btn--olive"
-        type="button"
-        [disabled]="!canProceed"
-        (click)="goToStep2()">
-        Next step
-      </button>
-    </div>
-  </section>
 }
 
 @if (step() === 2) {
   <!-- Step 2: Preferences -->
   <section class="preferences" aria-labelledby="prefs-heading">
-    <button class="preferences__back" type="button" (click)="goToStep1()">← Zutaten</button>
+    <button class="preferences__back" type="button" (click)="goToStep1()">← Ingredients</button>
     <h2 id="prefs-heading" class="preferences__heading">Choose your preferences</h2>
 
     <div class="preferences__counters">
       <div class="preferences__counter">
-        <p class="preferences__counter-label">Wie viele Portionen?</p>
+        <p class="preferences__counter-label">How many portions?</p>
         <div class="preferences__counter-row">
-          <button type="button" (click)="decreasePortions()" aria-label="Portionen verringern">−</button>
+          <button type="button" (click)="decreasePortions()" aria-label="Decrease portions">
+            <img src="assets/minus.svg" alt="" width="20" height="20" />
+          </button>
           <strong>{{ portions }}</strong>
-          <span>Portionen</span>
-          <button type="button" (click)="increasePortions()" aria-label="Portionen erhöhen">+</button>
+          <span>Portions</span>
+          <button type="button" (click)="increasePortions()" aria-label="Increase portions">
+            <img src="assets/plus.svg" alt="" width="20" height="20" />
+          </button>
         </div>
       </div>
       <div class="preferences__counter">
-        <p class="preferences__counter-label">Wie viele kochen mit?</p>
+        <p class="preferences__counter-label">How many chefs?</p>
         <div class="preferences__counter-row">
-          <button type="button" (click)="decreaseChefs()" aria-label="Köche verringern">−</button>
+          <button type="button" (click)="decreaseChefs()" aria-label="Decrease chefs"><img src="assets/minus.svg" alt="" width="20" height="20" /></button>
           <strong>{{ chefs }}</strong>
-          <span>{{ chefs === 1 ? 'Person' : 'Personen' }}</span>
-          <button type="button" (click)="increaseChefs()" aria-label="Köche erhöhen">+</button>
+          <span>{{ chefs === 1 ? 'Person' : 'People' }}</span>
+          <button type="button" (click)="increaseChefs()" aria-label="Increase chefs"><img src="assets/plus.svg" alt="" width="20" height="20" /></button>
         </div>
       </div>
     </div>
 
     <div class="preferences__form">
       <fieldset class="preferences__group">
-        <legend class="preferences__group-title">🕐 Kochzeit</legend>
+        <legend class="preferences__group-title"><img src="assets/clock.svg" alt="" width="20" height="20" /> Cooking time:</legend>
         <div class="preferences__tags">
           @for (c of complexities; track c) {
             <div class="preferences__tag-wrap">
               <app-tag
                 [label]="complexityLabels[c]"
                 [selected]="selectedComplexity === c"
-                (tagClick)="selectedComplexity = c" />
+                (tagClick)="selectedComplexity = c"
+              />
               <span class="preferences__tag-desc">{{ complexityDesc[c] }}</span>
             </div>
           }
@@ -95,25 +67,27 @@
       </fieldset>
 
       <fieldset class="preferences__group">
-        <legend class="preferences__group-title">🌍 Küche</legend>
+        <legend class="preferences__group-title"><img src="assets/world.svg" alt="" width="20" height="20" /> Cuisine</legend>
         <div class="preferences__tags">
           @for (cu of cuisines; track cu) {
             <app-tag
               [label]="cuisineLabels[cu]"
               [selected]="selectedCuisine === cu"
-              (tagClick)="selectedCuisine = cu" />
+              (tagClick)="selectedCuisine = cu"
+            />
           }
         </div>
       </fieldset>
 
       <fieldset class="preferences__group">
-        <legend class="preferences__group-title">🍴 Ernährung</legend>
+        <legend class="preferences__group-title"><img src="assets/fork_spoon.svg" alt="" width="20" height="20" /> Diet preferences</legend>
         <div class="preferences__tags">
           @for (d of diets; track d) {
             <app-tag
               [label]="dietLabels[d]"
               [selected]="selectedDiet === d"
-              (tagClick)="selectedDiet = d" />
+              (tagClick)="selectedDiet = d"
+            />
           }
         </div>
       </fieldset>
@@ -121,24 +95,27 @@
 
     @if (quota() && quota()!.ipQuotaRemaining === 0) {
       <div class="quota-banner quota-banner--error" role="alert">
-        <strong>Tageslimit erreicht.</strong> Du hast heute bereits 3 Rezepte generiert. Versuche es morgen wieder.
+        <strong>Daily limit reached.</strong> You've already generated 3 recipes today. Try again tomorrow.
       </div>
     } @else if (quota() && quota()!.systemQuotaRemaining === 0) {
       <div class="quota-banner quota-banner--error" role="alert">
-        <strong>Systemlimit erreicht.</strong> Das tägliche Limit von 12 Generierungen wurde erreicht. Bitte versuche es morgen wieder.
+        <strong>System limit reached.</strong> The daily limit of 12 generations has been reached. Please try again tomorrow.
       </div>
     } @else if (quota() && quota()!.ipQuotaRemaining <= 1) {
       <div class="quota-banner quota-banner--warn" role="status">
-        Noch <strong>{{ quota()!.ipQuotaRemaining }}</strong> Generierung heute verfügbar.
+        <strong>{{ quota()!.ipQuotaRemaining }}</strong> generation remaining today.
       </div>
     }
 
     <button
       class="btn btn--olive"
       type="button"
-      [disabled]="quota() !== null && (quota()!.ipQuotaRemaining === 0 || quota()!.systemQuotaRemaining === 0)"
-      (click)="generate()">
-      Rezept generieren
+      [disabled]="
+        quota() !== null && (quota()!.ipQuotaRemaining === 0 || quota()!.systemQuotaRemaining === 0)
+      "
+      (click)="generate()"
+    >
+      Generate recipe
     </button>
   </section>
 }

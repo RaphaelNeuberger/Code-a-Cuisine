@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { from, catchError, of, switchMap, map, timeout } from 'rxjs';
 import { RecipeStateService } from '../../shared/services/recipe-state.service';
 import { N8nService } from '../../shared/services/n8n.service';
 import { RecipeService } from '../../shared/services/recipe.service';
@@ -20,6 +21,7 @@ export class RecipeSuggestions implements OnInit {
   private readonly n8n = inject(N8nService);
   private readonly recipeService = inject(RecipeService);
   private readonly router = inject(Router);
+  private readonly injector = inject(EnvironmentInjector);
 
   readonly recipes = signal<Recipe[]>([]);
   readonly isLoading = signal<boolean>(true);
@@ -38,12 +40,18 @@ export class RecipeSuggestions implements OnInit {
   /** Calls n8n, saves to Firestore, stores results in state */
   private generateRecipes(): void {
     const request = this.state.request()!;
-    this.n8n.generateRecipes(request).subscribe({
-      next: async (recipes) => {
-        const ids = await this.recipeService.saveRecipes(recipes);
-        const withIds = recipes.map((r, i) => ({ ...r, id: ids[i] }));
-        this.state.setRecipes(withIds);
-        this.recipes.set(withIds);
+    this.n8n.generateRecipes(request).pipe(
+      switchMap(recipes =>
+        from(runInInjectionContext(this.injector, () => this.recipeService.saveRecipes(recipes))).pipe(
+          timeout(8000),
+          map(ids => recipes.map((r, i) => ({ ...r, id: ids[i] }))),
+          catchError(() => of(recipes))
+        )
+      )
+    ).subscribe({
+      next: (recipes) => {
+        this.state.setRecipes(recipes);
+        this.recipes.set(recipes);
         this.isLoading.set(false);
       },
       error: (err: Error) => {

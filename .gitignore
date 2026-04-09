@@ -45,3 +45,10 @@ Thumbs.db
 
 # Git Worktrees
 .worktrees/
+
+# Environment files with secrets — copy from *.example.ts and fill in your values
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# Design assets (Figma exports — stored locally only, copied to src/assets/)
+/Design/

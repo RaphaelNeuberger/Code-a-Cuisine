@@ -1,4 +1,9 @@
 <main class="library">
+
+  <nav class="library__nav">
+    <button type="button" class="library__back" (click)="goBack()">← Back</button>
+  </nav>
+
   <!-- Upper section: title + most liked -->
   <section class="library__upper" aria-labelledby="cookbook-heading">
     <div class="library__intro">
@@ -10,14 +15,25 @@
     </div>
     @if (mostLiked().length > 0) {
       <aside class="library__most-liked" aria-labelledby="most-liked-heading">
-        <h2 id="most-liked-heading" class="library__most-liked-title">Most liked recipes ♥</h2>
+        <h2 id="most-liked-heading" class="library__most-liked-title">
+          Most liked recipes
+          <img src="assets/heart.png" alt="" width="20" height="20" aria-hidden="true" />
+        </h2>
         <ul class="library__most-liked-list" role="list">
           @for (r of mostLiked(); track r.id) {
             <li>
-              <a [routerLink]="['/recipe', r.id]" class="library__liked-card">
-                <p class="library__liked-time">🕐 {{ r.cookingTimeMinutes }}min</p>
+              <a [routerLink]="['/recipe', r.id]" [queryParams]="{ from: 'library' }" class="library__liked-card">
+                <div class="library__liked-header">
+                  <p class="library__liked-time">
+                    <img src="assets/clock.svg" alt="" width="14" height="14" aria-hidden="true" />
+                    Cooking time: {{ r.cookingTimeMinutes }}min
+                  </p>
+                  <span class="library__liked-hearts">
+                    <img src="assets/favorite.svg" alt="" width="14" height="14" aria-hidden="true" />
+                    {{ r.hearts }}
+                  </span>
+                </div>
                 <p class="library__liked-name">{{ r.title }}</p>
-                <span class="library__liked-hearts">♥ {{ r.hearts }}</span>
               </a>
             </li>
           }
@@ -28,75 +44,22 @@
 
   <!-- Cuisine category grid -->
   <section class="library__categories" aria-labelledby="categories-heading">
-    <h2 id="categories-heading" class="visually-hidden">Küchen-Kategorien</h2>
+    <h2 id="categories-heading">Cuisine categories</h2>
     <ul class="library__grid" role="list">
       @for (cat of cuisineCategories; track cat.value) {
         <li>
-          <button
-            class="library__cat-card"
-            [class.library__cat-card--active]="selectedCuisine === cat.value"
-            type="button"
-            (click)="filterByCuisine(cat.value)"
-            [attr.aria-pressed]="selectedCuisine === cat.value">
+          <a class="library__cat-card" [routerLink]="['/cuisine', cat.value]">
             <span class="library__cat-label">{{ cat.label }} {{ cat.emoji }}</span>
-            <img class="library__cat-img" [src]="cat.img" [alt]="cat.label" [title]="cat.label">
-          </button>
+            <div class="library__cat-img-wrap">
+              <img class="library__cat-img" [src]="cat.img" [alt]="cat.label" [title]="cat.label">
+            </div>
+          </a>
         </li>
       }
     </ul>
   </section>
 
-  <!-- Filters -->
-  <section class="library__filters" aria-label="Filter">
-    <div class="library__filter-group">
-      <span class="library__filter-label">Ernährung:</span>
-      @for (d of dietOptions; track d.value) {
-        <app-tag
-          [label]="d.label"
-          [selected]="selectedDiet === d.value"
-          (tagClick)="filterByDiet(d.value)" />
-      }
-    </div>
-    <div class="library__filter-group">
-      <span class="library__filter-label">Zeit:</span>
-      @for (c of complexityOptions; track c.value) {
-        <app-tag
-          [label]="c.label"
-          [selected]="selectedComplexity === c.value"
-          (tagClick)="filterByComplexity(c.value)" />
-      }
-    </div>
-  </section>
-
-  <!-- Recipe grid -->
-  <section class="library__results" aria-live="polite" aria-label="Rezepte">
-    @if (allRecipes().length === 0) {
-      <p class="library__empty">Noch keine Rezepte vorhanden.</p>
-    } @else {
-      <ul class="library__recipe-grid" role="list">
-        @for (r of allRecipes(); track r.id) {
-          <li>
-            <a [routerLink]="['/recipe', r.id]">
-              <app-recipe-card [recipe]="r" variant="library" />
-            </a>
-          </li>
-        }
-      </ul>
-      @if (hasMore()) {
-        <div class="library__pagination">
-          <button
-            class="library__load-more"
-            type="button"
-            [disabled]="isLoadingMore()"
-            (click)="loadMore()">
-            {{ isLoadingMore() ? 'Lädt...' : 'Mehr laden' }}
-          </button>
-        </div>
-      }
-    }
-  </section>
-
   <footer class="library__footer">
-    <a routerLink="/ingredients" class="library__regen">Neues Rezept generieren →</a>
+    <a routerLink="/ingredients" class="library__regen">Generate new recipe →</a>
   </footer>
 </main>

@@ -3,7 +3,7 @@
 } @else if (error()) {
   <section class="results-error" aria-live="assertive">
     <p class="results-error__msg">{{ error() }}</p>
-    <a routerLink="/ingredients" class="btn btn--cream">Zurück zu Zutaten</a>
+    <a routerLink="/ingredients" class="btn btn--cream">Back to ingredients</a>
   </section>
 } @else {
   <section class="results" aria-labelledby="results-heading">
@@ -19,7 +19,9 @@
           <span class="results__tag">{{ complexityTag }}</span>
         </div>
       </div>
-      <div class="results__visual" aria-hidden="true"></div>
+      <div class="results__visual" aria-hidden="true">
+        <img src="assets/ki_recipe-suggestions.png" alt="" class="results__visual-img" />
+      </div>
     </div>
 
     <div class="results__cards" role="list">
@@ -31,7 +33,7 @@
     </div>
 
     <div class="results__footer">
-      <a routerLink="/ingredients" class="results__regen">Neues Rezept generieren →</a>
+      <a routerLink="/ingredients" class="results__regen">Generate new recipe →</a>
     </div>
   </section>
 }

@@ -6,6 +6,14 @@
   flex-direction: column;
   gap: var(--space-lg);
 
+  &__form {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: flex-end;
+
+    .ingredient-input__field-group { flex: 1; }
+  }
+
   &__label {
     font-size: var(--text-label);
     font-weight: 500;
@@ -53,8 +61,8 @@
   }
 
   &__add {
-    background: var(--color-olive);
-    color: var(--color-cream);
+    background: none;
+    color: #396039;
     border-radius: var(--radius-sm);
     width: 36px;
     height: 36px;

@@ -63,13 +63,71 @@
     font-family: var(--font-heading);
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    padding: var(--space-md);
+  @media (max-width: 768px) and (min-width: 601px) {
+    padding: 0 40px;
 
-    &__title { font-size: var(--text-h1-mob); }
-    &__visuals { display: none; }
-    &__cta-bottom { left: var(--space-md); }
+    &__title { font-size: 72px; }
+    &__subtitle { font-size: var(--text-h5); }
+
+    &__food {
+      &--1 { width: 340px; height: 340px; top: -20px; right: -20px; }
+      &--2 { width: 340px; height: 340px; top: 295px; right: -20px; }
+      &--3 { width: 360px; height: 360px; bottom: -40px; right: -20px; transform: rotate(18.91deg); }
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+    min-height: 100svh;
+    padding: 0;
+    overflow: hidden;
+
+    &__content {
+      padding: 88px var(--space-md) var(--space-md) var(--space-md);
+      gap: var(--space-md);
+      justify-content: flex-start;
+      padding-bottom: 0;
+      z-index: 1;
+    }
+
+    &__subtitle { font-size: var(--text-label); }
+
+    &__title {
+      font-size: 40px;
+      white-space: normal;
+      line-height: 1.1;
+    }
+
+    &__visuals {
+      display: flex;
+      min-height: unset;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 55%;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    &__food {
+      position: absolute;
+      border-radius: 50%;
+      object-fit: cover;
+      &--1 { width: 220px; height: 220px; top: 20px; right: -40px; }
+      &--2 { width: 220px; height: 220px; top: 210px; right: -40px; }
+      &--3 { width: 240px; height: 240px; top: 400px; right: -40px; transform: none; }
+    }
+
+    &__cta-bottom {
+      position: absolute;
+      bottom: var(--space-xl);
+      left: var(--space-md);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+      background: none;
+    }
   }
 }
 
@@ -98,7 +156,7 @@
     display: flex;
     gap: var(--space-xl);
     width: 100%;
-    max-width: var(--content-max-width);
+    max-width: calc(var(--content-max-width) * 0.9);
     align-items: flex-start;
   }
 
@@ -298,6 +356,8 @@
     font-weight: 500;
     padding: 16px 26px;
     border-radius: 5px;
+
+    @media (max-width: 768px) { padding-left: 0; }
   }
 
   // &:disabled { opacity: 0.5; cursor: not-allowed; }

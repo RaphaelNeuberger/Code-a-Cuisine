@@ -2,7 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-xl) var(--space-xl) var(--space-md) 68px;
+  padding: var(--space-xl) 0 var(--space-md) 0;
+
+  @media (max-width: 1280px) {
+    padding-left: 68px;
+    padding-right: 68px;
+  }
+  max-width: var(--content-max-width);
+  margin: 0 auto;
   position: relative;
 
   &__logo img { height: 48px; width: auto; }

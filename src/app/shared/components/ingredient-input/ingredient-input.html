@@ -2,14 +2,27 @@
   <div class="ingredient-input__form">
     <div class="ingredient-input__field-group">
       <label for="ingredient-name" class="ingredient-input__label">Ingredient</label>
-      <input
-        id="ingredient-name"
-        type="text"
-        class="ingredient-input__text"
-        [(ngModel)]="name"
-        placeholder="e.g. Pasta"
-        (keyup.enter)="addIngredient()"
-        autocomplete="off">
+      <div class="ingredient-input__autocomplete">
+        <input
+          id="ingredient-name"
+          type="text"
+          class="ingredient-input__text"
+          [(ngModel)]="name"
+          placeholder="e.g. Pasta"
+          (input)="onNameInput()"
+          (blur)="hideSuggestions()"
+          (keyup.enter)="addIngredient()"
+          autocomplete="off">
+        @if (suggestions().length > 0) {
+          <ul class="ingredient-input__suggestions" role="listbox" aria-label="Ingredient suggestions">
+            @for (s of suggestions(); track s) {
+              <li class="ingredient-input__suggestion"
+                  role="option"
+                  (mousedown)="selectSuggestion(s)">{{ s }}</li>
+            }
+          </ul>
+        }
+      </div>
     </div>
     <div class="ingredient-input__size-group">
       <label for="ingredient-amount" class="ingredient-input__label">Quantity</label>
@@ -33,6 +46,4 @@
       </div>
     </div>
   </div>
-
-
 </section>

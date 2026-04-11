@@ -19,7 +19,11 @@
           Most liked recipes
           <img src="assets/heart.png" alt="" width="20" height="20" aria-hidden="true" />
         </h2>
-        <ul class="library__most-liked-list" role="list">
+        <ul class="library__most-liked-list" role="list"
+          (mousedown)="dragStart($event)"
+          (mousemove)="dragMove($event)"
+          (mouseup)="dragEnd()"
+          (mouseleave)="dragEnd()">
           @for (r of mostLiked(); track r.id) {
             <li>
               <a [routerLink]="['/recipe', r.id]" [queryParams]="{ from: 'library' }" class="library__liked-card">
@@ -43,15 +47,15 @@
   </section>
 
   <!-- Cuisine category grid -->
-  <section class="library__categories" aria-labelledby="categories-heading">
-    <h2 id="categories-heading">Cuisine categories</h2>
+  <section class="library__categories">
+
     <ul class="library__grid" role="list">
       @for (cat of cuisineCategories; track cat.value) {
         <li>
           <a class="library__cat-card" [routerLink]="['/cuisine', cat.value]">
-            <span class="library__cat-label">{{ cat.label }} {{ cat.emoji }}</span>
+            <span class="library__cat-label">{{ cat.label }} <span class="library__cat-emoji">{{ cat.emoji }}</span></span>
             <div class="library__cat-img-wrap">
-              <img class="library__cat-img" [src]="cat.img" [alt]="cat.label" [title]="cat.label">
+              <img class="library__cat-img" [src]="cat.img" [alt]="cat.label" [title]="cat.label" loading="lazy">
             </div>
           </a>
         </li>

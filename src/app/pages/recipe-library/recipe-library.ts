@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ElementRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { DocumentSnapshot } from '@angular/fire/firestore';
@@ -25,8 +25,7 @@ const CUISINES: { value: CuisineType; label: string; emoji: string; img: string 
 export class RecipeLibrary implements OnInit {
   private readonly recipeService = inject(RecipeService);
   private readonly location = inject(Location);
-
-  goBack(): void { this.location.back(); }
+  private readonly host = inject(ElementRef);
 
   readonly cuisineCategories = CUISINES;
   readonly allRecipes = signal<Recipe[]>([]);
@@ -53,27 +52,33 @@ export class RecipeLibrary implements OnInit {
   selectedDiet: DietType | undefined;
   selectedComplexity: ComplexityType | undefined;
 
+  goBack(): void { this.location.back(); }
+
+  private drag: { x: number; scrollLeft: number } | null = null;
+
+  dragStart(e: MouseEvent): void {
+    const el = e.currentTarget as HTMLElement;
+    this.drag = { x: e.pageX, scrollLeft: el.scrollLeft };
+    el.style.cursor = 'grabbing';
+    el.style.userSelect = 'none';
+  }
+
+  dragMove(e: MouseEvent): void {
+    if (!this.drag) return;
+    e.preventDefault();
+    const el = e.currentTarget as HTMLElement;
+    el.scrollLeft = this.drag.scrollLeft - (e.pageX - this.drag.x);
+  }
+
+  dragEnd(e?: MouseEvent): void {
+    if (!this.drag) return;
+    this.drag = null;
+    const el = (e?.currentTarget ?? this.host.nativeElement.querySelector('.library__most-liked-list')) as HTMLElement | null;
+    if (el) { el.style.cursor = 'grab'; el.style.userSelect = ''; }
+  }
+
   ngOnInit(): void {
-    this.loadRecipes();
     this.recipeService.getMostLiked().subscribe(r => this.mostLiked.set(r));
-  }
-
-  /** Applies the given cuisine filter and reloads recipes */
-  filterByCuisine(cuisine: CuisineType): void {
-    this.selectedCuisine = this.selectedCuisine === cuisine ? undefined : cuisine;
-    this.loadRecipes();
-  }
-
-  /** Applies the given diet filter and reloads recipes */
-  filterByDiet(diet: DietType): void {
-    this.selectedDiet = this.selectedDiet === diet ? undefined : diet;
-    this.loadRecipes();
-  }
-
-  /** Applies the given complexity filter and reloads recipes */
-  filterByComplexity(complexity: ComplexityType): void {
-    this.selectedComplexity = this.selectedComplexity === complexity ? undefined : complexity;
-    this.loadRecipes();
   }
 
   /** Loads next page and appends to existing list */

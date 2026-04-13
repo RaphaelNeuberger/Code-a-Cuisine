@@ -72,6 +72,20 @@
 
   .nav {
     color: var(--color-cream);
+    max-width: none;
+    margin: 0;
+    padding-left: 68px;
+    padding-right: 68px;
+
+    @media (max-width: 900px) and (min-width: 601px) {
+      padding-left: var(--space-lg);
+      padding-right: var(--space-lg);
+    }
+
+    @media (max-width: 600px) {
+      padding-left: var(--space-md);
+      padding-right: var(--space-md);
+    }
   }
 
   .nav__links { display: none; }

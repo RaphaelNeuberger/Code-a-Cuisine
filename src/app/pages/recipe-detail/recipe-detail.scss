@@ -11,14 +11,17 @@
 
   // Back link
   &__back {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
     font-size: var(--text-label);
     font-weight: 500;
     color: var(--color-green-mid);
     text-decoration: none;
-    padding-left: 80px;
+    max-width: calc(var(--content-max-width) * 0.9);
+    margin: 0 auto;
+    width: 100%;
+    padding: var(--space-lg) 0 var(--space-lg);
 
     &:hover { text-decoration: underline; }
   }

@@ -52,10 +52,12 @@ export class RecipeLibrary implements OnInit {
   selectedDiet: DietType | undefined;
   selectedComplexity: ComplexityType | undefined;
 
+  /** Navigates back to the previous page. */
   goBack(): void { this.location.back(); }
 
   private drag: { x: number; scrollLeft: number } | null = null;
 
+  /** Begins mouse-drag scroll on the most-liked carousel. */
   dragStart(e: MouseEvent): void {
     const el = e.currentTarget as HTMLElement;
     this.drag = { x: e.pageX, scrollLeft: el.scrollLeft };
@@ -63,6 +65,7 @@ export class RecipeLibrary implements OnInit {
     el.style.userSelect = 'none';
   }
 
+  /** Scrolls the carousel while dragging. */
   dragMove(e: MouseEvent): void {
     if (!this.drag) return;
     e.preventDefault();
@@ -70,6 +73,7 @@ export class RecipeLibrary implements OnInit {
     el.scrollLeft = this.drag.scrollLeft - (e.pageX - this.drag.x);
   }
 
+  /** Ends the drag scroll and resets the cursor. */
   dragEnd(e?: MouseEvent): void {
     if (!this.drag) return;
     this.drag = null;
@@ -77,6 +81,7 @@ export class RecipeLibrary implements OnInit {
     if (el) { el.style.cursor = 'grab'; el.style.userSelect = ''; }
   }
 
+  /** Loads the most-liked recipes on init. */
   ngOnInit(): void {
     this.recipeService.getMostLiked().subscribe(r => this.mostLiked.set(r));
   }

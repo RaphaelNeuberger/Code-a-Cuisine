@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { QuotaInfo } from '../models/request.model';
 
 const QUOTA_CACHE_KEY = 'cac_quota';
-const QUOTA_ENDPOINT = '/quota-check';
 
 /** Checks and caches the IP-based generation quota */
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,7 @@ export class QuotaService {
   checkQuota(): Observable<QuotaInfo> {
     const cached = sessionStorage.getItem(QUOTA_CACHE_KEY);
     if (cached) return of(JSON.parse(cached) as QuotaInfo);
-    return this.http.get<QuotaInfo>(QUOTA_ENDPOINT).pipe(
+    return this.http.get<QuotaInfo>(environment.n8nQuotaUrl).pipe(
       catchError(() => of({ ipQuotaRemaining: 3, systemQuotaRemaining: 12 }))
     );
   }

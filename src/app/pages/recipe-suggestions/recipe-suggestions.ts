@@ -61,12 +61,12 @@ export class RecipeSuggestions implements OnInit {
     });
   }
 
-  /** Returns the selected cuisine preference for display */
+  /** Returns the selected cuisine preference for display. */
   get cuisineTag(): string {
     return this.state.request()?.cuisine ?? '';
   }
 
-  /** Returns the selected complexity for display */
+  /** Returns the selected complexity preference for display. */
   get complexityTag(): string {
     return this.state.request()?.complexity ?? '';
   }

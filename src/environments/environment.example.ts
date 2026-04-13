@@ -8,5 +8,6 @@ export const environment = {
     messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
     appId: 'YOUR_APP_ID'
   },
-  n8nWebhookUrl: 'YOUR_N8N_WEBHOOK_TEST_URL'
+  n8nWebhookUrl: 'YOUR_N8N_WEBHOOK_TEST_URL',
+  n8nWebhookSecret: 'YOUR_N8N_WEBHOOK_SECRET'
 };

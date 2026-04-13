@@ -60,16 +60,19 @@ export class CuisineRecipes implements OnInit {
     return pages;
   });
 
+  /** Returns the human-readable label for the active cuisine. */
   get cuisineLabel(): string {
     const c = this.cuisine();
     return c ? CUISINE_LABELS[c] : '';
   }
 
+  /** Returns the hero image path for the active cuisine. */
   get cuisineHero(): string {
     const c = this.cuisine();
     return c ? CUISINE_HEROES[c] : '';
   }
 
+  /** Reads the cuisine route param and loads all matching recipes. */
   ngOnInit(): void {
     const c = this.route.snapshot.paramMap.get('cuisine') as CuisineType;
     this.cuisine.set(c);
@@ -83,10 +86,12 @@ export class CuisineRecipes implements OnInit {
 
   private readonly heartedIds = new Set<string>();
 
+  /** Returns true if the recipe has already been hearted this session. */
   isHearted(id: string): boolean {
     return this.heartedIds.has(id);
   }
 
+  /** Increments the heart counter once per session and updates local state. */
   async heartRecipe(event: Event, id: string): Promise<void> {
     event.preventDefault();
     event.stopPropagation();
@@ -98,16 +103,19 @@ export class CuisineRecipes implements OnInit {
     );
   }
 
+  /** Navigates to the given page number and scrolls to top. */
   goToPage(page: number | '...'): void {
     if (typeof page !== 'number') return;
     this.currentPage.set(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /** Navigates to the previous page if not already on the first. */
   prev(): void {
     if (this.currentPage() > 1) this.goToPage(this.currentPage() - 1);
   }
 
+  /** Navigates to the next page if not already on the last. */
   next(): void {
     if (this.currentPage() < this.totalPages()) this.goToPage(this.currentPage() + 1);
   }

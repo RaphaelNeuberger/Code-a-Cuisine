@@ -10,14 +10,18 @@
           [(ngModel)]="name"
           placeholder="e.g. Pasta"
           (input)="onNameInput()"
+          (keydown)="blockDigits($event)"
           (blur)="hideSuggestions()"
-          (keyup.enter)="addIngredient()"
           autocomplete="off">
+        @if (nameError) {
+          <span class="ingredient-input__error">Please enter an ingredient name.</span>
+        }
         @if (suggestions().length > 0) {
           <ul class="ingredient-input__suggestions" role="listbox" aria-label="Ingredient suggestions">
             @for (s of suggestions(); track s) {
               <li class="ingredient-input__suggestion"
                   role="option"
+                  [class.ingredient-input__suggestion--active]="activeSuggestionIndex === $index"
                   (mousedown)="selectSuggestion(s)">{{ s }}</li>
             }
           </ul>
@@ -27,6 +31,9 @@
     <div class="ingredient-input__size-group">
       <label for="ingredient-amount" class="ingredient-input__label">Quantity</label>
       <div class="ingredient-input__size-row">
+        @if (amountError) {
+          <span class="ingredient-input__error">Please enter a quantity.</span>
+        }
         <input
           id="ingredient-amount"
           type="number"

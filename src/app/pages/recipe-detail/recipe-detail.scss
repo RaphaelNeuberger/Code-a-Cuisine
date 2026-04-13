@@ -2,6 +2,16 @@
   max-width: calc(var(--content-max-width) * 0.9);
   margin: 0 auto;
   padding: var(--space-3xl) 40px;
+
+  @media (max-width: 1280px) {
+    margin-left: 68px;
+    margin-right: 68px;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: var(--space-md);
+    margin-right: var(--space-md);
+  }
   display: flex;
   flex-direction: column;
   gap: var(--space-3xl);
@@ -18,10 +28,18 @@
     font-weight: 500;
     color: var(--color-green-mid);
     text-decoration: none;
-    max-width: calc(var(--content-max-width) * 0.9);
+    max-width: var(--content-max-width);
     margin: 0 auto;
     width: 100%;
-    padding: var(--space-lg) 0 var(--space-lg);
+    padding: var(--space-lg) 0;
+
+    @media (max-width: 1280px) {
+      padding-left: 68px;
+    }
+
+    @media (max-width: 768px) {
+      padding-left: var(--space-md);
+    }
 
     &:hover { text-decoration: underline; }
   }

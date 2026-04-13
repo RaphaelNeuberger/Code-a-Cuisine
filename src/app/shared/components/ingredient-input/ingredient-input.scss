@@ -26,6 +26,16 @@
     position: relative;
   }
 
+  &__error {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    font-size: var(--text-small);
+    color: #c0392b;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
   &__suggestions {
     position: absolute;
     top: calc(100% + 4px);
@@ -36,7 +46,8 @@
     list-style: none;
     padding: var(--space-sm) 0;
     z-index: 10;
-    box-shadow: 0 4px 16px rgba(16, 49, 11, 0.12);
+    box-shadow: 0 4px 20px rgba(16, 49, 11, 0.18);
+    border: 1px solid rgba(57, 96, 57, 0.15);
   }
 
   &__suggestion {
@@ -46,7 +57,7 @@
     color: var(--color-green-dark);
     cursor: pointer;
 
-    &:hover { background: rgba(57, 96, 57, 0.08); }
+    &:hover, &--active { background: rgba(57, 96, 57, 0.15); }
   }
 
   &__text {
@@ -64,6 +75,7 @@
     display: flex;
     gap: var(--space-sm);
     align-items: center;
+    position: relative;
   }
 
   &__amount {

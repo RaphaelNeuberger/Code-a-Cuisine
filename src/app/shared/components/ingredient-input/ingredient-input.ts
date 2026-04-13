@@ -85,8 +85,36 @@ export class IngredientInput {
   amount = 100;
   unit = 'g';
   editIndex: number | null = null;
+  nameError = false;
+  amountError = false;
+  activeSuggestionIndex = -1;
 
+  /** Blocks digit keys and handles arrow-key navigation and Enter/Escape for the suggestion list. */
+  blockDigits(event: KeyboardEvent): void {
+    if (/^\d$/.test(event.key)) { event.preventDefault(); return; }
+    const list = this.suggestions();
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.activeSuggestionIndex = Math.min(this.activeSuggestionIndex + 1, list.length - 1);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.activeSuggestionIndex = Math.max(this.activeSuggestionIndex - 1, -1);
+    } else if (event.key === 'Enter' && this.activeSuggestionIndex >= 0) {
+      event.preventDefault();
+      this.selectSuggestion(list[this.activeSuggestionIndex]);
+      // Suggestion selected — do not add yet, user still needs to enter quantity
+    } else if (event.key === 'Enter' && this.activeSuggestionIndex < 0 && list.length === 0) {
+      this.addIngredient();
+    } else if (event.key === 'Escape') {
+      this.suggestions.set([]);
+      this.activeSuggestionIndex = -1;
+    }
+  }
+
+  /** Strips digits from the name field and updates the autocomplete suggestions. */
   onNameInput(): void {
+    this.name = this.name.replace(/\d/g, '');
+    this.activeSuggestionIndex = -1;
     const q = this.name.trim().toLowerCase();
     if (q.length < 1) { this.suggestions.set([]); return; }
     const existing = new Set(this.ingredients().map(i => i.name.toLowerCase()));
@@ -95,18 +123,23 @@ export class IngredientInput {
     );
   }
 
+  /** Fills the name field with the selected suggestion and closes the list. */
   selectSuggestion(name: string): void {
     this.name = name;
     this.suggestions.set([]);
+    this.activeSuggestionIndex = -1;
   }
 
+  /** Hides the suggestion list after a short delay to allow click events to fire. */
   hideSuggestions(): void {
     setTimeout(() => this.suggestions.set([]), 150);
   }
 
   /** Adds or updates an ingredient */
   addIngredient(): void {
-    if (!this.name.trim()) return;
+    this.nameError = !this.name.trim();
+    this.amountError = !this.amount || this.amount < 1;
+    if (this.nameError || this.amountError) return;
     this.suggestions.set([]);
     let updated: Ingredient[];
     if (this.editIndex !== null) {
@@ -121,6 +154,8 @@ export class IngredientInput {
     this.ingredientsChange.emit(updated);
     this.name = '';
     this.amount = 100;
+    this.nameError = false;
+    this.amountError = false;
   }
 
   /** Removes ingredient at the given index from the list */

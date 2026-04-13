@@ -1,13 +1,19 @@
 {
   "/webhook-test": {
-    "target": "http://localhost:5678",
-    "secure": false,
+    "target": "https://agents.newmountains.it",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/webhook": {
-    "target": "http://localhost:5678",
-    "secure": false,
+    "target": "https://agents.newmountains.it",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/quota-check": {
+    "target": "https://agents.newmountains.it",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   }

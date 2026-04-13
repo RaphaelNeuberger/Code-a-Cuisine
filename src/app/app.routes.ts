@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+/** Lazy-loaded route definitions for the application. */
 export const routes: Routes = [
   { path: '', redirectTo: 'ingredients', pathMatch: 'full' },
   { path: 'ingredients', loadComponent: () => import('./pages/ingredients/ingredients').then(m => m.Ingredients) },

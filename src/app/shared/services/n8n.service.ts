@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -15,7 +15,8 @@ export class N8nService {
    * @param request - user's ingredient list and cooking preferences
    */
   generateRecipes(request: RecipeRequest): Observable<Recipe[]> {
-    return this.http.post<{ recipes: any[] }>(environment.n8nWebhookUrl, request).pipe(
+    const headers = new HttpHeaders({ 'codeacousine-webhook-secret': environment.n8nWebhookSecret });
+    return this.http.post<{ recipes: any[] }>(environment.n8nWebhookUrl, request, { headers }).pipe(
       map(response => response.recipes.map(r => this.normalizeRecipe(r))),
       catchError((err: HttpErrorResponse) => throwError(() => new Error(this.mapError(err))))
     );

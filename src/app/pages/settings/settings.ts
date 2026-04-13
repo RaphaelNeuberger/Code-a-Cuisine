@@ -13,6 +13,7 @@ export class Settings implements OnInit {
   private readonly quotaService = inject(QuotaService);
   readonly quota = signal<QuotaInfo | null>(null);
 
+  /** Fetches the current quota status on init. */
   ngOnInit(): void {
     this.quotaService.checkQuota().subscribe(q => this.quota.set(q));
   }

@@ -4,6 +4,7 @@ import { IngredientInput } from '../../shared/components/ingredient-input/ingred
 import { RecipeStateService } from '../../shared/services/recipe-state.service';
 import { Ingredient } from '../../shared/models/recipe.model';
 
+/** Intermediate step that collects ingredients before navigating to preferences. */
 @Component({
   selector: 'app-generate-recipe',
   imports: [IngredientInput],
@@ -16,14 +17,17 @@ export class GenerateRecipe {
 
   readonly ingredients = signal<Ingredient[]>([]);
 
+  /** Returns true when at least one ingredient has been added. */
   get canProceed(): boolean {
     return this.ingredients().length > 0;
   }
 
+  /** Syncs the ingredient list from the child input component. */
   onIngredientsChange(ingredients: Ingredient[]): void {
     this.ingredients.set(ingredients);
   }
 
+  /** Persists ingredients to state and navigates to the preferences step. */
   goToPreferences(): void {
     this.state.setIngredients(this.ingredients());
     this.router.navigate(['/ingredients'], { queryParams: { step: 2 } });

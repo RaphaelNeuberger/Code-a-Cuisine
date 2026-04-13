@@ -8,16 +8,20 @@ main {
   flex: 1;
 }
 
-.app-footer {
-  padding: var(--space-lg);
-  text-align: center;
+.global-imprint {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
   font-size: var(--text-small);
   color: var(--color-green-mid);
+  opacity: 0.5;
+  text-decoration: none;
+  white-space: nowrap;
+  z-index: 10;
+
+  &:hover { opacity: 1; text-decoration: underline; }
+
+  &--dark { color: #ffffff; }
 }
 
-:host(.page--results) .app-footer {
-  background: var(--color-olive);
-  color: var(--color-cream);
-
-  a { color: var(--color-cream); }
-}

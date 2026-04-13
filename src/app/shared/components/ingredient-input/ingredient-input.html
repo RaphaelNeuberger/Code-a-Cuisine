@@ -8,13 +8,16 @@
           type="text"
           class="ingredient-input__text"
           [(ngModel)]="name"
-          placeholder="e.g. Pasta"
+          placeholder="e.g. Chicken"
           (input)="onNameInput()"
           (keydown)="blockDigits($event)"
           (blur)="hideSuggestions()"
           autocomplete="off">
         @if (nameError) {
           <span class="ingredient-input__error">Please enter an ingredient name.</span>
+        }
+        @if (notInListError) {
+          <span class="ingredient-input__error">Please enter a valid ingredient name.</span>
         }
         @if (suggestions().length > 0) {
           <ul class="ingredient-input__suggestions" role="listbox" aria-label="Ingredient suggestions">
@@ -41,7 +44,7 @@
           [(ngModel)]="amount"
           min="1">
         <select class="ingredient-input__unit" [(ngModel)]="unit" aria-label="Unit">
-          @for (u of units; track u) {
+          @for (u of availableUnits; track u) {
             <option [value]="u">{{ u }}</option>
           }
         </select>

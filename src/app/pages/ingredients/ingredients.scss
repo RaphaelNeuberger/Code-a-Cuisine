@@ -71,6 +71,21 @@
     }
   }
 
+  &__imprint {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 68px;
+    font-size: var(--text-small);
+    color: #ffffff;
+    opacity: 0.6;
+    text-decoration: none;
+
+    &:hover { opacity: 1; text-decoration: underline; }
+
+    @media (max-width: 900px) { left: var(--space-lg); }
+    @media (max-width: 600px) { left: var(--space-md); }
+  }
+
   &__hungry {
     font-size: var(--text-card);
     font-weight: 500;

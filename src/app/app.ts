@@ -23,6 +23,24 @@ export class App {
     { initialValue: this.router.url === '/recipe-suggestions' }
   );
 
+  readonly showImprint = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(e => {
+        const url = (e as NavigationEnd).urlAfterRedirects;
+        const isHero = url === '/ingredients' && !url.includes('step=2');
+        return !isHero && !url.startsWith('/imprint');
+      })
+    ),
+    {
+      initialValue: (() => {
+        const url = this.router.url;
+        const isHero = url === '/ingredients' && !url.includes('step=2');
+        return !isHero && !url.startsWith('/imprint');
+      })()
+    }
+  );
+
   @HostBinding('class.page--results') get resultsPage(): boolean {
     return this.isResultsPage() ?? false;
   }

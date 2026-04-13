@@ -5,6 +5,11 @@
     <p class="results-error__msg">{{ error() }}</p>
     <a routerLink="/ingredients" class="btn btn--cream">Back to ingredients</a>
   </section>
+} @else if (recipes().length === 0) {
+  <section class="results-error" aria-live="assertive">
+    <p class="results-error__msg">No recipes could be generated for your ingredients. Please try different ingredients or combinations.</p>
+    <a routerLink="/generate-recipe" class="btn btn--cream">Back to ingredients</a>
+  </section>
 } @else {
   <section class="results" aria-labelledby="results-heading">
     <div class="results__header">

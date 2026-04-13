@@ -60,7 +60,11 @@
     > * { display: flex; }
   }
 
-  &__footer { display: flex; justify-content: flex-end; }
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 48px;
+  }
 
   &__regen {
     color: var(--color-cream);

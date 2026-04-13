@@ -11,6 +11,18 @@
     gap: var(--space-xl);
   }
 
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-green-mid);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+
   &__heading { font-size: var(--text-h2); font-weight: 600; color: var(--color-green-mid); }
 
   &__section {

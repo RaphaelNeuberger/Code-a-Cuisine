@@ -111,6 +111,30 @@
     justify-content: center;
     min-height: 44px;
     min-width: 44px;
+
+    &--save {
+      color: var(--color-white);
+      background: var(--color-green-mid);
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+    }
+  }
+
+  &__cancel {
+    background: none;
+    color: rgba(16, 49, 11, 0.5);
+    border-radius: var(--radius-sm);
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    cursor: pointer;
+
+    &:hover { color: var(--color-green-dark); }
   }
 
   @media (max-width: 480px) {

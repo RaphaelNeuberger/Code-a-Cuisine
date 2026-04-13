@@ -4,6 +4,7 @@ import { IngredientInput } from '../../shared/components/ingredient-input/ingred
 import { Tag } from '../../shared/components/tag/tag';
 import { RecipeStateService } from '../../shared/services/recipe-state.service';
 import { QuotaService } from '../../shared/services/quota.service';
+import { CustomIngredientsService } from '../../shared/services/custom-ingredients.service';
 import { Ingredient, CuisineType, DietType, ComplexityType } from '../../shared/models/recipe.model';
 import { RecipeRequest, QuotaInfo } from '../../shared/models/request.model';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ export class Ingredients implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly quotaService = inject(QuotaService);
+  private readonly customIngredients = inject(CustomIngredientsService);
 
   readonly step = signal<1 | 2>(1);
   readonly quota = signal<QuotaInfo | null>(null);
@@ -56,9 +58,10 @@ export class Ingredients implements OnInit {
   selectedDiet: DietType = 'none';
   selectedComplexity: ComplexityType = 'quick';
 
-  /** Loads quota info on init to show warning banner if quota is exhausted */
+  /** Loads quota info on init; triggers background load of shared custom ingredients. */
   ngOnInit(): void {
     this.quotaService.checkQuota().subscribe(q => this.quota.set(q));
+    this.customIngredients.load();
     this.ingredients.set(this.state.ingredients());
     this.route.queryParams.subscribe(params => {
       const stepParam = params['step'];

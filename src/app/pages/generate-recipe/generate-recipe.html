@@ -13,13 +13,42 @@
         <ul class="ingredient-input__list" aria-label="Hinzugefügte Zutaten">
           @for (ing of ingredients(); track ing.name; let i = $index) {
             <li class="ingredient-input__item">
-              <span aria-hidden="true">•</span>
-              <span class="ingredient-input__qty">{{ ing.amount }}{{ ing.unit }}</span>
-              <span class="ingredient-input__name">{{ ing.name }}</span>
-              <div class="ingredient-input__actions">
-                <button type="button" (click)="ingredientInput.startEdit(i)" aria-label="Bearbeiten"><img src="assets/edit.svg" alt="" width="18" height="18" /></button>
-                <button type="button" (click)="ingredientInput.removeIngredient(i)" aria-label="Entfernen"><img src="assets/delete.svg" alt="" width="18" height="18" /></button>
-              </div>
+              @if (ingredientInput.editIndex === i) {
+                <div class="ingredient-input__inline-edit">
+                  <input
+                    class="ingredient-input__inline-text"
+                    type="text"
+                    aria-label="Ingredient name"
+                    [value]="ingredientInput.name"
+                    (input)="ingredientInput.name = $any($event.target).value"
+                    autocomplete="off" />
+                  <input
+                    class="ingredient-input__inline-amount"
+                    type="number"
+                    aria-label="Quantity"
+                    [value]="ingredientInput.amount"
+                    (input)="ingredientInput.amount = +$any($event.target).value"
+                    min="1" />
+                  <select
+                    class="ingredient-input__inline-unit"
+                    aria-label="Unit"
+                    (change)="ingredientInput.unit = $any($event.target).value">
+                    @for (u of ingredientInput.availableUnits; track u) {
+                      <option [value]="u" [selected]="u === ingredientInput.unit">{{ u }}</option>
+                    }
+                  </select>
+                  <button type="button" class="ingredient-input__inline-save" (click)="ingredientInput.addIngredient()" aria-label="Save">✓</button>
+                  <button type="button" class="ingredient-input__inline-cancel" (click)="ingredientInput.cancelEdit()" aria-label="Cancel">✕</button>
+                </div>
+              } @else {
+                <span aria-hidden="true">•</span>
+                <span class="ingredient-input__qty">{{ ing.amount }}{{ ing.unit }}</span>
+                <span class="ingredient-input__name">{{ ing.name }}</span>
+                <div class="ingredient-input__actions">
+                  <button type="button" (click)="ingredientInput.startEdit(i)" aria-label="Edit"><img src="assets/edit.svg" alt="" width="18" height="18" /></button>
+                  <button type="button" (click)="ingredientInput.removeIngredient(i)" aria-label="Remove"><img src="assets/delete.svg" alt="" width="18" height="18" /></button>
+                </div>
+              }
             </li>
           }
         </ul>

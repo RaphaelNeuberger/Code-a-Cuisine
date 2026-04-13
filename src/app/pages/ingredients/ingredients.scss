@@ -4,7 +4,7 @@
   min-height: 100vh;
   padding: 0 68px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 7fr 3fr;
   position: relative;
   overflow: hidden;
 
@@ -14,10 +14,12 @@
     justify-content: center;
     gap: var(--space-xl);
     padding-bottom: var(--space-3xl);
+    padding-right: var(--space-2xl);
+    min-width: 0;
   }
 
   &__subtitle {
-    font-size: var(--text-h3);
+    font-size: clamp(16px, 3vw, var(--text-h3));
     font-weight: 600;
     color: #F5F5DC;
     font-family: var(--font-body);
@@ -25,12 +27,15 @@
 
   &__title {
     font-family: var(--font-heading);
-    font-size: var(--text-h1);
+    font-size: clamp(26px, 8vw, var(--text-h1));
     font-weight: 700;
     color: var(--color-cream);
-    line-height: 1;
+    line-height: 1.1;
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 
+  // __visuals ist position:relative, damit __menu darin absolut positioniert werden kann
   &__visuals {
     position: relative;
     display: flex;
@@ -38,22 +43,32 @@
     min-height: 100vh;
   }
 
-  &__food {
+  // Bild beginnt am linken Rand der 30%-Spalte, behält Breite+Höhe, läuft nach rechts raus
+  &__menu {
     position: absolute;
-    border-radius: 50%;
-    object-fit: cover;
-    &--1 { width: 512px; height: 512px; top: -20px; right: 0px; }
-    &--2 { width: 512px; height: 512px; top: 315px; right: 0px; }
-    &--3 { width: 548px; height: 548px; bottom: -60px; right: 0px; transform: rotate(18.91deg); }
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: auto;
+    max-width: none;
   }
 
   &__cta-bottom {
     position: absolute;
     bottom: var(--space-3xl);
     left: 68px;
+    right: 30%;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: var(--space-md);
+    padding-right: var(--space-2xl);
+
+    @media (max-width: 1100px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
   }
 
   &__hungry {
@@ -63,70 +78,42 @@
     font-family: var(--font-heading);
   }
 
-  @media (max-width: 768px) and (min-width: 601px) {
-    padding: 0 40px;
+  // Tablet: 601px – 900px
+  @media (max-width: 900px) and (min-width: 601px) {
+    padding: 0 var(--space-lg);
 
-    &__title { font-size: 72px; }
-    &__subtitle { font-size: var(--text-h5); }
-
-    &__food {
-      &--1 { width: 340px; height: 340px; top: -20px; right: -20px; }
-      &--2 { width: 340px; height: 340px; top: 295px; right: -20px; }
-      &--3 { width: 360px; height: 360px; bottom: -40px; right: -20px; transform: rotate(18.91deg); }
+    &__cta-bottom {
+      left: var(--space-lg);
+      right: 30%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
     }
   }
 
+  // Mobile: ≤ 600px — 70/30-Verhältnis bleibt, Bild läuft nach rechts raus
   @media (max-width: 600px) {
-    grid-template-columns: 1fr 1fr;
-    min-height: 100svh;
-    padding: 0;
-    overflow: hidden;
+    min-height: unset;
+    height: 100svh;
+    padding: 0 var(--space-md);
 
     &__content {
-      padding: 88px var(--space-md) var(--space-md) var(--space-md);
       gap: var(--space-md);
-      justify-content: flex-start;
-      padding-bottom: 0;
-      z-index: 1;
-    }
-
-    &__subtitle { font-size: var(--text-label); }
-
-    &__title {
-      font-size: 40px;
-      white-space: normal;
-      line-height: 1.1;
+      padding-right: var(--space-sm);
+      padding-bottom: var(--space-3xl);
     }
 
     &__visuals {
-      display: flex;
       min-height: unset;
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 55%;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    &__food {
-      position: absolute;
-      border-radius: 50%;
-      object-fit: cover;
-      &--1 { width: 220px; height: 220px; top: 20px; right: -40px; }
-      &--2 { width: 220px; height: 220px; top: 210px; right: -40px; }
-      &--3 { width: 240px; height: 240px; top: 400px; right: -40px; transform: none; }
     }
 
     &__cta-bottom {
-      position: absolute;
       bottom: var(--space-xl);
       left: var(--space-md);
+      right: 30%;
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-xs);
-      background: none;
     }
   }
 }
@@ -354,10 +341,9 @@
     color: var(--color-cream);
     font-size: var(--text-label);
     font-weight: 500;
-    padding: 16px 26px;
+    padding: 16px 26px 16px 0;
     border-radius: 5px;
-
-    @media (max-width: 768px) { padding-left: 0; }
+    white-space: nowrap;
   }
 
   // &:disabled { opacity: 0.5; cursor: not-allowed; }

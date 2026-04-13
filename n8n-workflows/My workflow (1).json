@@ -13,10 +13,10 @@
           "values": [
             {
               "role": "system",
-              "content": "=Du bist ein Rezept-KI. Du MUSST genau 3 Rezepte erstellen.\nWICHTIG: Verwende AUSSCHLIESSLICH die Zutaten aus der Liste des Nutzers.\nErfinde KEINE neuen Zutaten. Kein Gemüse, kein Fleisch, keine Gewürze die nicht angegeben sind.\nErlaubt sind nur Zusätze: Wasser, Salz, Pfeffer, Öl.\nAntworte AUSSCHLIESSLICH mit JSON, kein Text davor oder danach.\n\nAntworte NUR mit validem JSON:\n{\n  \"recipes\": [{\n    \"title\": \"...\",\n    \"cookingTimeMinutes\": 20,\n    \"cuisine\": \"italian\",\n    \"diet\": \"none\",\n    \"complexity\": \"quick\",\n    \"portions\": 2,\n    \"chefs\": 1,\n    \"ingredients\": [{ \"name\": \"...\", \"amount\": 1, \"unit\": \"...\" }],\n    \"extraIngredients\": [],\n    \"steps\": [{ \"stepNumber\": 1, \"title\": \"...\", \"description\": \"...\" }],\n    \"nutrition\": { \"calories\": 400, \"protein\": 20, \"fat\": 15, \"carbs\": 50 },\n    \"hearts\": 0,\n    \"createdAt\": \"2026-04-08T00:00:00.000Z\"\n  }]\n}"
+              "content": "Du bist ein Rezept-KI. Du MUSST genau 3 Rezepte erstellen.\nWICHTIG: Verwende AUSSCHLIESSLICH die Zutaten aus der Liste des Nutzers.\nErfinde KEINE neuen Zutaten. Kein Gemüse, kein Fleisch, keine Gewürze die nicht angegeben sind.\nErlaubt sind nur Zusätze: Wasser, Salz, Pfeffer, Öl.\nVerteile die Zubereitungsschritte auf die angegebene Anzahl Köche. \nWeise jedem Schritt einen \"chef\"-Wert (1, 2 oder 3) zu.\nAntworte AUSSCHLIESSLICH mit JSON, kein Text davor oder danach.\n\nHalte die gewünschte Küche des Nutzers so weit wie möglich ein.\nWechsle die Küche NUR dann, wenn die Zutaten absolut nicht zur gewünschten Küche passen.\nBevorzuge in diesem Fall: german | italian | japanese | indian | gourmet.\nVerwende \"fusion\" NUR als absoluten letzten Ausweg, wenn keine andere Küche passt.\nSetze das \"cuisine\"-Feld im JSON auf den tatsächlich verwendeten Wert.\nErlaubte Werte: german | italian | japanese | indian | gourmet | fusion\n\nAntworte NUR mit validem JSON:\n{\n  \"recipes\": [{\n    \"title\": \"...\",\n    \"cookingTimeMinutes\": 20,\n    \"cuisine\": \"italian\",\n    \"diet\": \"none\",\n    \"complexity\": \"quick\",\n    \"portions\": 2,\n    \"chefs\": 1,\n    \"ingredients\": [{ \"name\": \"...\", \"amount\": 1, \"unit\": \"...\" }],\n    \"extraIngredients\": [],\n    \"steps\": [{ \"stepNumber\": 1, \"title\": \"...\", \"description\": \"...\", \"chef\": 1 }],\n    \"nutrition\": { \"calories\": 400, \"protein\": 20, \"fat\": 15, \"carbs\": 50 },\n    \"hearts\": 0,\n    \"createdAt\": \"2026-04-08T00:00:00.000Z\"\n  }]\n}"
             },
             {
-              "content": "=Meine verfügbaren Zutaten sind: {{ $('Webhook').item.json.body.ingredients.map(i => i.name).join(', ') }}\n\nWICHTIG: Verwende ALLE diese Zutaten in den Rezepten. Jede Zutat aus der Liste MUSS in mindestens einem Rezept vorkommen.\nZusätzlich erlaubt: Wasser, Salz, Pfeffer, Öl.\nKeine anderen Zutaten.\n\nPortionen: {{ $('Webhook').item.json.body.portions }}\nKüche: {{ $('Webhook').item.json.body.cuisine }}\nDiät: {{ $('Webhook').item.json.body.diet }}\nKomplexität: {{ $('Webhook').item.json.body.complexity }}"
+              "content": "=Meine verfügbaren Zutaten sind: {{ $('Webhook').item.json.body.ingredients.map(i => i.name).join(', ') }}\n\nWICHTIG: Verwende ALLE diese Zutaten in den Rezepten. Jede Zutat aus der Liste MUSS in mindestens einem Rezept vorkommen.\nZusätzlich erlaubt: Wasser, Salz, Pfeffer, Öl.\nKeine anderen Zutaten.\n\nPortionen: {{ $('Webhook').item.json.body.portions }}\nAnzahl Köche: {{ $('Webhook').item.json.body.chefs }}\nKüche: {{ $('Webhook').item.json.body.cuisine }}\nDiät: {{ $('Webhook').item.json.body.diet }}\nKomplexität: {{ $('Webhook').item.json.body.complexity }}\n"
             }
           ]
         },
@@ -26,15 +26,15 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        208,
-        0
+        -208,
+        288
       ],
-      "id": "5a7a722c-2ad0-486e-8518-89b653e42895",
+      "id": "0cce1842-685c-4d9c-be43-58043b021dee",
       "name": "Message a model",
       "credentials": {
         "openAiApi": {
-          "id": "B2DnZpzAyR8SZoEN",
-          "name": "OpenAi account 2"
+          "id": "elQL80AwI5nxZU2M",
+          "name": "OpenAI account"
         }
       }
     },
@@ -45,10 +45,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        560,
-        0
+        144,
+        288
       ],
-      "id": "86f9f189-7c11-4707-aaf2-558b406a8663",
+      "id": "dc8956a7-8098-479b-bac8-0c32fea09eb2",
       "name": "Code in JavaScript"
     },
     {
@@ -60,10 +60,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        768,
-        0
+        352,
+        288
       ],
-      "id": "cf9043e9-7759-4456-a11f-db1f0c48bc5b",
+      "id": "9d11803c-dc6f-4f35-ba94-321e765dcd56",
       "name": "Respond to Webhook"
     },
     {
@@ -76,10 +76,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
-        0
+        -416,
+        288
       ],
-      "id": "e73d3c2d-3b66-4c33-9d85-7940a4cec394",
+      "id": "f17f2a2e-4bfd-4e8b-88fd-0ab07c4d5802",
       "name": "Webhook",
       "webhookId": "c745b865-85a0-404c-9b24-e996e7a0bbe7"
     }
@@ -123,14 +123,13 @@
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "231f5a48-6bc0-49e0-a890-3a47a3214e04",
+  "versionId": "a61bdd33-155c-4b2e-84f4-cfce91afb5e3",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "34aae92629158420ef6e672234e1df8cd4c0bbc5b494e97aa093107f7b10f299"
+    "instanceId": "20700f6970c5075693d4bc606ee50f0ed17c76a2f6881676a33ccd537c3bf253"
   },
-  "id": "Fn3GhY9u9fwjrdZX",
+  "id": "n4HmM1vdP1gmVHkh",
   "tags": []
 }

@@ -219,9 +219,11 @@
 
   &__section-banner-img {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
     object-fit: cover;
     object-position: center;
   }
@@ -394,11 +396,14 @@
 
   &__loading { text-align: center; padding: var(--space-3xl); font-size: var(--text-h5); }
 
+  @media (max-width: 960px) {
+    &__card { flex-direction: column; }
+    &__aside { align-items: flex-start; }
+  }
+
   @media (max-width: 768px) {
     padding: var(--space-lg) var(--space-md);
 
-    &__card { flex-direction: column; }
-    &__aside { align-items: flex-start; }
     &__ingredient-cols { flex-direction: column; gap: var(--space-lg); }
     &__steps { grid-template-columns: 1fr; }
     &__cta { flex-direction: column; align-items: flex-start; }

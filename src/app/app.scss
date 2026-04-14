@@ -8,17 +8,29 @@ main {
   flex: 1;
 }
 
-.global-imprint {
+:host.page--preferences {
   position: fixed;
-  bottom: var(--space-lg);
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+
+  main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
+.global-imprint {
+  display: block;
+  text-align: center;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
   font-size: var(--text-small);
   color: var(--color-green-mid);
-  opacity: 0.5;
   text-decoration: none;
-  white-space: nowrap;
-  z-index: 10;
+  opacity: 0.5;
 
   &:hover { opacity: 1; text-decoration: underline; }
 

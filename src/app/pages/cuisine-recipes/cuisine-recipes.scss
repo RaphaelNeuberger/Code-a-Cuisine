@@ -4,10 +4,11 @@
   gap: 0;
 
   &__nav {
-    padding: var(--space-2xl) 0 var(--space-xl);
+    padding: var(--space-2xl) var(--space-xl) var(--space-xl);
     max-width: 1248px;
     margin: 0 auto;
     width: 100%;
+    box-sizing: border-box;
   }
 
   &__back {
@@ -24,10 +25,11 @@
   &__generate-row {
     display: flex;
     justify-content: flex-end;
-    padding: 0 0 var(--space-xl);
+    padding: 0 var(--space-xl) var(--space-xl);
     max-width: 1248px;
     margin: 0 auto;
     width: 100%;
+    box-sizing: border-box;
   }
 
   // Hero banner
@@ -45,9 +47,11 @@
 
   &__hero-img {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
     object-fit: cover;
     object-position: center;
   }
@@ -106,7 +110,8 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-width: 300px;
+    flex: 1;
+    min-width: 0;
   }
 
   &__recipe-time {
@@ -206,6 +211,21 @@
     &__nav { padding: var(--space-md); }
     &__generate-row { padding: 0 var(--space-md) var(--space-md); max-width: none; margin: 0; }
     &__list { padding: 0 var(--space-md); }
+  }
+
+  @media (max-width: 480px) {
+    &__recipe { padding: 6px 4px; }
+
+    &__recipe-title { font-size: var(--text-body); }
+
+    &__recipe-time { font-size: 13px; }
+
+    &__tag {
+      padding: 4px 8px;
+      font-size: 13px;
+    }
+
+    &__recipe-tags { gap: 4px; }
   }
 }
 

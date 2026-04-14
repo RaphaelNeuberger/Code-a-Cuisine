@@ -41,7 +41,19 @@ export class App {
     }
   );
 
+  readonly isPreferencesPage = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(e => (e as NavigationEnd).urlAfterRedirects.includes('step=2'))
+    ),
+    { initialValue: this.router.url.includes('step=2') }
+  );
+
   @HostBinding('class.page--results') get resultsPage(): boolean {
     return this.isResultsPage() ?? false;
+  }
+
+  @HostBinding('class.page--preferences') get preferencesPage(): boolean {
+    return this.isPreferencesPage() ?? false;
   }
 }

@@ -9,8 +9,9 @@
 }
 
 .library__nav {
-  padding: var(--space-lg) 0 0;
+  padding: var(--space-lg) var(--space-2xl) 0;
 
+  @media (max-width: 960px) { padding: var(--space-lg) var(--space-lg) 0; }
   @media (max-width: 768px) { padding: var(--space-md) var(--space-md) 0; }
 }
 

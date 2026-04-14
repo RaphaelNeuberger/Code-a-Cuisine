@@ -190,8 +190,18 @@
   }
 }
 
+:host {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 // Preferences
 .preferences {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: var(--space-3xl) 68px;
   display: flex;
   flex-direction: column;

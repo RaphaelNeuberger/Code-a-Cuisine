@@ -18,8 +18,9 @@ export class QuotaService {
   checkQuota(): Observable<QuotaInfo> {
     const cached = sessionStorage.getItem(QUOTA_CACHE_KEY);
     if (cached) return of(JSON.parse(cached) as QuotaInfo);
+    if (!environment.n8nQuotaUrl) return of({ ipQuotaRemaining: 10, systemQuotaRemaining: 12 });
     return this.http.get<QuotaInfo>(environment.n8nQuotaUrl).pipe(
-      catchError(() => of({ ipQuotaRemaining: 3, systemQuotaRemaining: 12 }))
+      catchError(() => of({ ipQuotaRemaining: 10, systemQuotaRemaining: 12 }))
     );
   }
 

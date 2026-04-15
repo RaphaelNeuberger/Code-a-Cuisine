@@ -4,7 +4,7 @@
     Got random stuff in your kitchen? Pop it in—we've got the perfect recipe waiting.
   </p>
   <div class="ingredients-step__layout">
-    <app-ingredient-input #ingredientInput (ingredientsChange)="onIngredientsChange($event)" />
+    <app-ingredient-input #ingredientInput [initialIngredients]="ingredients()" (ingredientsChange)="onIngredientsChange($event)" />
     <div class="ingredients-step__list-panel">
       <p class="ingredients-step__list-label">Your ingredients</p>
       @if (ingredients().length === 0) {

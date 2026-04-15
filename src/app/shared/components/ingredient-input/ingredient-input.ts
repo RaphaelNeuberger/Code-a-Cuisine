@@ -1,4 +1,4 @@
-import { Component, output, signal, inject } from '@angular/core';
+import { Component, OnInit, input, output, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Ingredient } from '../../models/recipe.model';
 import { CustomIngredientsService } from '../../services/custom-ingredients.service';
@@ -129,16 +129,23 @@ function detectCategoryByKeyword(name: string): UnitCategory | null {
   return null;
 }
 
-/** Checks if a string looks like a real word (has vowels, no wild consonant clusters, valid chars only). */
+/** Maximum sensible amount per unit */
+const UNIT_MAX: Record<string, number> = {
+  g: 5000, ml: 5000, pcs: 50, tsp: 20, tbsp: 20, cup: 10
+};
+
+const VOWELS = /[aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý]/i;
+const CONSONANT_CLUSTER = /[^aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý\s\-'']{4,}/i;
+const VALID_CHARS = /^[a-zA-ZäöüÄÖÜßàáâãåæçèéêëìíîïðñòóôõøùúûýþÿÀÁÂÃÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕØÙÚÛÝÞŸ\s\-'']+$/;
+
+/** Checks if a string looks like a real ingredient name. */
 function isLikelyIngredient(name: string): boolean {
   const s = name.trim();
   if (s.length < 2) return false;
-  // Only letters (including accented/umlaut), spaces, hyphens, apostrophes
-  if (!/^[a-zA-ZäöüÄÖÜßàáâãåæçèéêëìíîïðñòóôõøùúûýþÿÀÁÂÃÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕØÙÚÛÝÞŸ\s\-'']+$/.test(s)) return false;
-  // Must have at least one vowel
-  if (!/[aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý]/i.test(s)) return false;
-  // No run of 5+ consecutive consonants (catches "lkjsdf" style gibberish)
-  if (/[^aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý\s\-'']{5,}/i.test(s)) return false;
+  if (!VALID_CHARS.test(s)) return false;
+  if (!VOWELS.test(s)) return false;
+  // No run of 4+ consecutive consonants (catches "sdgs", "lkjsdf" style gibberish)
+  if (CONSONANT_CLUSTER.test(s)) return false;
   return true;
 }
 
@@ -150,12 +157,21 @@ function isLikelyIngredient(name: string): boolean {
   templateUrl: './ingredient-input.html',
   styleUrl: './ingredient-input.scss'
 })
-export class IngredientInput {
+export class IngredientInput implements OnInit {
   private readonly customService = inject(CustomIngredientsService);
 
+  readonly initialIngredients = input<Ingredient[]>([]);
   readonly ingredientsChange = output<Ingredient[]>();
 
   readonly ingredients = signal<Ingredient[]>([]);
+
+  ngOnInit(): void {
+    const initial = this.initialIngredients();
+    if (initial.length > 0) {
+      this.ingredients.set(initial);
+      this.ingredientsChange.emit(initial);
+    }
+  }
   readonly units = UNITS;
   readonly suggestions = signal<string[]>([]);
 
@@ -169,7 +185,10 @@ export class IngredientInput {
   editIndex: number | null = null;
   nameError = false;
   notInListError = false;
+  duplicateError = false;
   amountError = false;
+  amountRangeError = false;
+  amountDecimalError = false;
   activeSuggestionIndex = -1;
 
   get isEditing(): boolean { return this.editIndex !== null; }
@@ -213,10 +232,14 @@ export class IngredientInput {
     }
   }
 
-  /** Strips digits from the name field and updates the autocomplete suggestions. */
+  /** Strips digits, auto-capitalizes first letter, updates autocomplete suggestions. */
   onNameInput(): void {
     this.name = this.name.replace(/\d/g, '');
+    if (this.name.length > 0) {
+      this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
+    }
     this.notInListError = false;
+    this.duplicateError = false;
     this.syncUnit();
     this.activeSuggestionIndex = -1;
     const q = this.name.trim().toLowerCase();
@@ -244,16 +267,20 @@ export class IngredientInput {
   /** Adds or updates an ingredient */
   addIngredient(): void {
     const trimmed = this.name.trim();
-    this.nameError = !trimmed;
-    this.notInListError = !!trimmed && !isLikelyIngredient(trimmed);
-    this.amountError = !this.amount || this.amount < 1;
-    if (this.nameError || this.notInListError || this.amountError) return;
+    const max = UNIT_MAX[this.unit] ?? 9999;
 
-    // If not in the known list, persist to Firestore so all users see it next time
-    const known = this.allIngredients().some(i => i.toLowerCase() === trimmed.toLowerCase());
-    if (!known) {
-      this.customService.add(trimmed);
-    }
+    const inList = this.allIngredients().some(i => i.toLowerCase() === trimmed.toLowerCase());
+
+    this.nameError = !trimmed;
+    this.notInListError = !!trimmed && !inList;
+    this.duplicateError = !!trimmed && inList && this.editIndex === null &&
+      this.ingredients().some(i => i.name.toLowerCase() === trimmed.toLowerCase());
+    this.amountError = !this.amount || this.amount < 1;
+    this.amountRangeError = !this.amountError && this.amount > max;
+    this.amountDecimalError = !this.amountError && this.unit === 'pcs' && !Number.isInteger(this.amount);
+
+    if (this.nameError || this.notInListError || this.duplicateError ||
+        this.amountError || this.amountRangeError || this.amountDecimalError) return;
 
     this.suggestions.set([]);
     let updated: Ingredient[];
@@ -271,7 +298,10 @@ export class IngredientInput {
     this.amount = 100;
     this.nameError = false;
     this.notInListError = false;
+    this.duplicateError = false;
     this.amountError = false;
+    this.amountRangeError = false;
+    this.amountDecimalError = false;
   }
 
   /** Removes ingredient at the given index from the list */
@@ -302,7 +332,10 @@ export class IngredientInput {
     this.unit = 'g';
     this.nameError = false;
     this.notInListError = false;
+    this.duplicateError = false;
     this.amountError = false;
+    this.amountRangeError = false;
+    this.amountDecimalError = false;
     this.suggestions.set([]);
   }
 }

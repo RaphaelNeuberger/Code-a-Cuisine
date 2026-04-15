@@ -2,6 +2,6 @@
 <main>
   <router-outlet></router-outlet>
 </main>
-@if (showImprint()) {
-  <a routerLink="/imprint" class="global-imprint" [class.global-imprint--dark]="isResultsPage()">Imprint</a>
+@if (showImprint() && !isResultsPage()) {
+  <a routerLink="/imprint" class="global-imprint">Imprint</a>
 }

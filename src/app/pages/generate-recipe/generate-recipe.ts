@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IngredientInput } from '../../shared/components/ingredient-input/ingredient-input';
 import { RecipeStateService } from '../../shared/services/recipe-state.service';
@@ -11,11 +11,18 @@ import { Ingredient } from '../../shared/models/recipe.model';
   templateUrl: './generate-recipe.html',
   styleUrl: './generate-recipe.scss',
 })
-export class GenerateRecipe {
+export class GenerateRecipe implements OnInit {
   private readonly state = inject(RecipeStateService);
   private readonly router = inject(Router);
 
   readonly ingredients = signal<Ingredient[]>([]);
+
+  ngOnInit(): void {
+    const saved = this.state.ingredients();
+    if (saved.length > 0) {
+      this.ingredients.set(saved);
+    }
+  }
 
   /** Returns true when at least one ingredient has been added. */
   get canProceed(): boolean {

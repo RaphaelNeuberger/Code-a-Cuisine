@@ -91,7 +91,7 @@ export class Ingredients implements OnInit {
 
   /** Returns to the ingredient input step */
   goToStep1(): void {
-    this.step.set(1);
+    this.router.navigate(['/generate-recipe']);
   }
 
   /** Increments portions counter up to max 12 */

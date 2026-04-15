@@ -26,14 +26,23 @@ export class RecipeSuggestions implements OnInit {
   readonly recipes = signal<Recipe[]>([]);
   readonly isLoading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
+  readonly isQuotaError = signal<boolean>(false);
 
-  /** On init, trigger recipe generation using the stored request */
+  /** On init, use cached recipes if available, otherwise generate */
   ngOnInit(): void {
     const request = this.state.request();
     if (!request) {
       this.router.navigate(['/ingredients']);
       return;
     }
+
+    const cached = this.state.recipes();
+    if (cached.length > 0) {
+      this.recipes.set(cached);
+      this.isLoading.set(false);
+      return;
+    }
+
     this.generateRecipes();
   }
 
@@ -55,7 +64,11 @@ export class RecipeSuggestions implements OnInit {
         this.isLoading.set(false);
       },
       error: (err: Error) => {
-        this.error.set(err.message);
+        if ((err as any)['quota']) {
+          this.isQuotaError.set(true);
+        } else {
+          this.error.set(err.message);
+        }
         this.isLoading.set(false);
       }
     });

@@ -29,14 +29,14 @@ export class App {
       map(e => {
         const url = (e as NavigationEnd).urlAfterRedirects;
         const isHero = url === '/ingredients' && !url.includes('step=2');
-        return !isHero && !url.startsWith('/imprint');
+        return !isHero && !url.startsWith('/imprint') && url !== '/recipe-suggestions';
       })
     ),
     {
       initialValue: (() => {
         const url = this.router.url;
         const isHero = url === '/ingredients' && !url.includes('step=2');
-        return !isHero && !url.startsWith('/imprint');
+        return !isHero && !url.startsWith('/imprint') && url !== '/recipe-suggestions';
       })()
     }
   );

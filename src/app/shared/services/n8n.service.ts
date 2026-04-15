@@ -18,7 +18,7 @@ export class N8nService {
     const headers = new HttpHeaders({ 'codeacousine-webhook-secret': environment.n8nWebhookSecret });
     return this.http.post<{ recipes: any[] }>(environment.n8nWebhookUrl, request, { headers }).pipe(
       map(response => response.recipes.map(r => this.normalizeRecipe(r))),
-      catchError((err: HttpErrorResponse) => throwError(() => new Error(this.mapError(err))))
+      catchError((err: HttpErrorResponse) => throwError(() => this.mapError(err)))
     );
   }
 
@@ -41,10 +41,14 @@ export class N8nService {
     } as Recipe;
   }
 
-  /** Maps HTTP error codes to German user-facing messages */
-  private mapError(err: HttpErrorResponse): string {
-    if (err.status === 429) return 'Tägliches Limit erreicht. Versuche es morgen wieder.';
-    if (err.status >= 500) return 'Fehler beim Generieren. Bitte erneut versuchen.';
-    return 'Keine Verbindung. Prüfe deine Internetverbindung.';
+  /** Maps HTTP error codes to user-facing errors with optional quota flag */
+  private mapError(err: HttpErrorResponse): Error {
+    if (err.status === 429) {
+      const e = new Error('QUOTA_EXCEEDED');
+      (e as any)['quota'] = true;
+      return e;
+    }
+    if (err.status >= 500) return new Error('Fehler beim Generieren. Bitte erneut versuchen.');
+    return new Error('Keine Verbindung. Prüfe deine Internetverbindung.');
   }
 }

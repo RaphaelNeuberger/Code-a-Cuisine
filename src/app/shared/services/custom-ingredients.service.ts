@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, EnvironmentInjector, inject, runInInjectionContext, signal } from '@angular/core';
 import { Firestore, doc, getDoc, setDoc, arrayUnion } from '@angular/fire/firestore';
 
 const CONFIG_PATH = 'config/ingredients';
@@ -7,6 +7,7 @@ const CONFIG_PATH = 'config/ingredients';
 @Injectable({ providedIn: 'root' })
 export class CustomIngredientsService {
   private readonly firestore = inject(Firestore);
+  private readonly injector = inject(EnvironmentInjector);
 
   readonly list = signal<string[]>([]);
   private loaded = false;
@@ -15,8 +16,8 @@ export class CustomIngredientsService {
   async load(): Promise<void> {
     if (this.loaded) return;
     try {
-      const ref = doc(this.firestore, CONFIG_PATH);
-      const snap = await getDoc(ref);
+      const ref = runInInjectionContext(this.injector, () => doc(this.firestore, CONFIG_PATH));
+      const snap = await runInInjectionContext(this.injector, () => getDoc(ref));
       if (snap.exists()) {
         this.list.set((snap.data()['list'] as string[]) ?? []);
       }
@@ -28,8 +29,8 @@ export class CustomIngredientsService {
   async add(name: string): Promise<void> {
     if (this.list().some(i => i.toLowerCase() === name.toLowerCase())) return;
     try {
-      const ref = doc(this.firestore, CONFIG_PATH);
-      await setDoc(ref, { list: arrayUnion(name) }, { merge: true });
+      const ref = runInInjectionContext(this.injector, () => doc(this.firestore, CONFIG_PATH));
+      await runInInjectionContext(this.injector, () => setDoc(ref, { list: arrayUnion(name) }, { merge: true }));
       this.list.update(l => [...l, name]);
     } catch { /* silently ignore write errors */ }
   }

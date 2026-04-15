@@ -23,6 +23,19 @@ main {
   }
 }
 
+:host.page--results {
+  height: 100vh;
+  overflow: hidden;
+
+  main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
 .global-imprint {
   display: block;
   text-align: center;

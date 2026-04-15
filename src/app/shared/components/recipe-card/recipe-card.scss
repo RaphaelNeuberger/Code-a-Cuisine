@@ -41,6 +41,14 @@
     margin-top: var(--space-xs);
   }
 
+  &__body {
+    flex: 1;
+  }
+
+  &__footer {
+    margin-top: auto;
+  }
+
   &__btn {
     display: inline-block;
     background: var(--color-cream);
@@ -50,7 +58,6 @@
     padding: 12px 24px;
     border-radius: var(--radius-sm);
     border: none;
-    margin-top: auto;
   }
 
   &__thumb {

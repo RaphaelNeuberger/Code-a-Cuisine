@@ -17,7 +17,10 @@
           <span class="ingredient-input__error">Please enter an ingredient name.</span>
         }
         @if (notInListError) {
-          <span class="ingredient-input__error">Please enter a valid ingredient name.</span>
+          <span class="ingredient-input__error">Not in our list — please pick from the suggestions.</span>
+        }
+        @if (duplicateError) {
+          <span class="ingredient-input__error">This ingredient is already on your list.</span>
         }
         @if (suggestions().length > 0) {
           <ul class="ingredient-input__suggestions" role="listbox" aria-label="Ingredient suggestions">
@@ -34,15 +37,22 @@
     <div class="ingredient-input__size-group">
       <label for="ingredient-amount" class="ingredient-input__label">Quantity</label>
       <div class="ingredient-input__size-row">
-        @if (amountError) {
-          <span class="ingredient-input__error">Please enter a quantity.</span>
-        }
         <input
           id="ingredient-amount"
           type="number"
           class="ingredient-input__amount"
+          [class.ingredient-input__amount--error]="amountError || amountRangeError || amountDecimalError"
           [(ngModel)]="amount"
           min="1">
+        @if (amountError) {
+          <span class="ingredient-input__error ingredient-input__error--amount">Min. 1</span>
+        }
+        @if (amountRangeError) {
+          <span class="ingredient-input__error ingredient-input__error--amount">Max. {{ unit === 'pcs' ? 50 : unit === 'cup' ? 10 : 5000 }} {{ unit }}</span>
+        }
+        @if (amountDecimalError) {
+          <span class="ingredient-input__error ingredient-input__error--amount">Whole numbers only</span>
+        }
         <select class="ingredient-input__unit" [(ngModel)]="unit" aria-label="Unit">
           @for (u of availableUnits; track u) {
             <option [value]="u">{{ u }}</option>

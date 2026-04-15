@@ -1,13 +1,28 @@
 @if (isLoading()) {
   <app-loading />
+} @else if (isQuotaError()) {
+  <section class="results-quota" aria-live="assertive">
+    <div class="results-quota__icon" aria-hidden="true">⏳</div>
+    <h2 class="results-quota__title">Daily limit reached</h2>
+    <p class="results-quota__msg">
+      You've used all <strong>10 free recipe generations</strong> for today.<br>
+      Come back in 24 hours and we'll cook up new ideas for you!
+    </p>
+    <a routerLink="/generate-recipe" class="btn btn--cream">Back to ingredients</a>
+  </section>
 } @else if (error()) {
   <section class="results-error" aria-live="assertive">
     <p class="results-error__msg">{{ error() }}</p>
-    <a routerLink="/ingredients" class="btn btn--cream">Back to ingredients</a>
+    <a routerLink="/generate-recipe" class="btn btn--cream">Back to ingredients</a>
   </section>
 } @else if (recipes().length === 0) {
-  <section class="results-error" aria-live="assertive">
-    <p class="results-error__msg">No recipes could be generated for your ingredients. Please try different ingredients or combinations.</p>
+  <section class="results-quota" aria-live="assertive">
+    <div class="results-quota__icon" aria-hidden="true">🥄</div>
+    <h2 class="results-quota__title">No recipes found</h2>
+    <p class="results-quota__msg">
+      We couldn't come up with a recipe for that combination.<br>
+      Try adding more ingredients or mixing things up a bit!
+    </p>
     <a routerLink="/generate-recipe" class="btn btn--cream">Back to ingredients</a>
   </section>
 } @else {
@@ -40,5 +55,6 @@
     <div class="results__footer">
       <a routerLink="/ingredients" class="results__regen">Generate new recipe →</a>
     </div>
+    <a routerLink="/imprint" class="results__imprint">Imprint</a>
   </section>
 }

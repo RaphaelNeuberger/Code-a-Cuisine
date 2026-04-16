@@ -37,6 +37,7 @@ export class GenerateRecipe implements OnInit {
   /** Persists ingredients to state and navigates to the preferences step. */
   goToPreferences(): void {
     this.state.setIngredients(this.ingredients());
+    this.state.setRecipes([]);
     this.router.navigate(['/ingredients'], { queryParams: { step: 2 } });
   }
 }

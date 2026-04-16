@@ -38,6 +38,7 @@ export class RecipeSuggestions implements OnInit {
 
     const cached = this.state.recipes();
     if (cached.length > 0) {
+      this.state.setIngredients([]);
       this.recipes.set(cached);
       this.isLoading.set(false);
       return;
@@ -60,6 +61,7 @@ export class RecipeSuggestions implements OnInit {
     ).subscribe({
       next: (recipes) => {
         this.state.setRecipes(recipes);
+        this.state.setIngredients([]);
         this.recipes.set(recipes);
         this.isLoading.set(false);
       },

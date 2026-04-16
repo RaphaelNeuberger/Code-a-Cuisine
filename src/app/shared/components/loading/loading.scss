@@ -17,9 +17,17 @@
   &__spinner {
     width: 253px;
     height: 309px;
-    background: #c4d0c4;
+    background: var(--color-card);
     border-radius: var(--radius-lg);
-    animation: pulse 1.5s ease-in-out infinite;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    img {
+      width: 85%;
+      object-fit: contain;
+    }
   }
 
   &__text {
@@ -30,7 +38,3 @@
   }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}

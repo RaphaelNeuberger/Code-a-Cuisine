@@ -412,6 +412,16 @@
   @media (max-width: 460px) {
     &__card { padding: var(--space-lg); }
 
+    &__title {
+      font-size: var(--text-card);
+      word-break: break-word;
+    }
+
+    &__info-row {
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
     &__nutrition-grid {
       flex-wrap: wrap;
       gap: var(--space-md);

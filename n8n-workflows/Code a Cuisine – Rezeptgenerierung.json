@@ -141,7 +141,7 @@
     },
     {
       "parameters": {
-        "jsCode": "try {\n  const text = $input.first().json.output[0].content[0].text;\n  const clean = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  const parsed = JSON.parse(clean);\n\n  if (!parsed.recipes || !Array.isArray(parsed.recipes)) {\n    return [{ json: { parseSuccess: false, error: 'Antwort enthält kein gültiges recipes-Array' } }];\n  }\n\n  return [{ json: { ...parsed, parseSuccess: true } }];\n} catch (error) {\n  return [{ json: { parseSuccess: false, error: error.message } }];\n}"
+        "jsCode": "try {\n  const text = $input.first().json.output[0].content[0].text;\n  const clean = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  const parsed = JSON.parse(clean);\n\n  if (!parsed.recipes || !Array.isArray(parsed.recipes)) {\n    return [{ json: { parseSuccess: false, error: 'Antwort enthält kein gültiges recipes-Array' } }];\n  }\n\n  // extraIngredients bereinigen: leere/ungültige Einträge entfernen\n  parsed.recipes = parsed.recipes.map(recipe => ({\n    ...recipe,\n    extraIngredients: (recipe.extraIngredients || []).filter(\n      ing => ing && typeof ing === 'object' && ing.name && String(ing.name).trim() !== ''\n    )\n  }));\n\n  return [{ json: { ...parsed, parseSuccess: true } }];\n} catch (error) {\n  return [{ json: { parseSuccess: false, error: error.message } }];\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

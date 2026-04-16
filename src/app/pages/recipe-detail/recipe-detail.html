@@ -86,11 +86,13 @@
               <li><span class="detail__ing-amount">{{ ing.amount }}{{ ing.unit }}</span><span>{{ ing.name }}</span></li>
             }</ul>
         </div>
-        @if (r.extraIngredients && r.extraIngredients.length > 0) {
+        @if (r.extraIngredients && r.extraIngredients.filter(i => i.name.trim()).length > 0) {
           <div class="detail__ingredient-col">
             <h3 class="detail__ingredient-sub">Extra ingredients</h3>
             <ul class="detail__ingredient-list">@for (ing of r.extraIngredients; track ing.name) {
-                <li><span class="detail__ing-amount">{{ ing.amount }}{{ ing.unit }}</span><span>{{ ing.name }}</span></li>
+                @if (ing.name.trim()) {
+                  <li><span class="detail__ing-amount">{{ ing.amount }}{{ ing.unit }}</span><span>{{ ing.name }}</span></li>
+                }
               }</ul>
           </div>
         }

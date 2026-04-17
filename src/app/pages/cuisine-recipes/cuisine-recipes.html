@@ -32,10 +32,12 @@
             </div>
           </div>
           <div class="cuisine__recipe-tags">
-            @if (r.diet && r.diet !== 'none') {
-              <span class="cuisine__tag">{{ r.diet }}</span>
-            }
-            <span class="cuisine__tag">{{ r.complexity }}</span>
+            <div class="cuisine__tag-labels">
+              @if (r.diet && r.diet !== 'none') {
+                <span class="cuisine__tag">{{ r.diet }}</span>
+              }
+              <span class="cuisine__tag">{{ r.complexity }}</span>
+            </div>
             <button
               type="button"
               class="cuisine__tag cuisine__tag--hearts"
